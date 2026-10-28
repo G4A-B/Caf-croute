@@ -19,6 +19,8 @@ body {
   font-weight: var(--graisse-normale);
   line-height: var(--interligne);
   -webkit-font-smoothing: antialiased;
+  /* Jamais un mot tout seul sur la dernière ligne (hérité partout, les titres sont équilibrés) */
+  text-wrap: pretty;
 }
 
 h1,

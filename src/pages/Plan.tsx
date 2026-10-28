@@ -4,7 +4,7 @@ import { IconeBiere, IconeMarche, IconeRepere, IconeRetour } from '../components
 import { DUREE_TIROIR_MS, Tiroir } from '../components/Tiroir.tsx'
 import { PictoSandwich, PictoTasse } from '../components/Pictos.tsx'
 import { lienGoogleMaps } from '../lib/itineraire.ts'
-import { formaterMinutes, formaterPrix } from '../lib/format.ts'
+import { formaterMinutes, formaterPrix, sansMotSeul } from '../lib/format.ts'
 import { propositions, type Choix, type Mode, type Proposition } from '../features/plan/plan.ts'
 
 const TYPES_LIEU: Record<string, string> = {
@@ -24,7 +24,7 @@ function Ligne({ choix, icone, avecLieu }: { choix: Choix; icone: React.ReactNod
       <span className="plan__icone">{icone}</span>
       <span className="plan__article">
         <span className="plan__nom-article">
-          {choix.releve.article}
+          {sansMotSeul(choix.releve.article)}
           {choix.releve.contenance_cl && ` · ${choix.releve.contenance_cl} cl`}
         </span>
         {avecLieu && (
@@ -32,7 +32,7 @@ function Ligne({ choix, icone, avecLieu }: { choix: Choix; icone: React.ReactNod
             {choix.lieu.nom} · {formaterMinutes(choix.lieu.minutes_a_pied)}
           </span>
         )}
-        {choix.releve.remarque && <span className="plan__remarque">{choix.releve.remarque}</span>}
+        {choix.releve.remarque && <span className="plan__remarque">{sansMotSeul(choix.releve.remarque)}</span>}
       </span>
       <span className="plan__prix">{formaterPrix(choix.releve.prix_centimes)}</span>
     </li>
@@ -79,7 +79,7 @@ function CartePlan({ proposition, numero, total, partir, voirPlus }: PropsCarte)
     <article className="carte-plan" aria-roledescription="carte" aria-label={`Idée ${numero} sur ${total}`}>
       <p className="carte-plan__type">{deuxLieux ? 'Deux adresses' : TYPES_LIEU[lieuPrincipal.type]}</p>
       <h2 className="carte-plan__lieu">
-        {deuxLieux ? `${proposition.manger!.lieu.nom} + ${proposition.cafe!.lieu.nom}` : lieuPrincipal.nom}
+        {sansMotSeul(deuxLieux ? `${proposition.manger!.lieu.nom} + ${proposition.cafe!.lieu.nom}` : lieuPrincipal.nom)}
       </h2>
       <ul className="plan__lignes">
         {proposition.manger && (
@@ -95,7 +95,7 @@ function CartePlan({ proposition, numero, total, partir, voirPlus }: PropsCarte)
           <ul>
             {proposition.autres.map((c, i) => (
               <li key={c.releve.id} className={i >= visibles ? 'plan__cache' : undefined} aria-hidden={i >= visibles}>
-                <span>{c.releve.article}</span>
+                <span>{sansMotSeul(c.releve.article)}</span>
                 <span className="plan__prix">{formaterPrix(c.releve.prix_centimes)}</span>
               </li>
             ))}
@@ -153,7 +153,7 @@ function ContenuDepart({ mode, proposition }: { mode: Mode; proposition: Proposi
           <p key={l.id} className="plan__adresse">
             <IconeMarche />
             <span>
-              <strong>{l.nom}</strong>, {l.adresse}
+              <strong>{l.nom}</strong>, {sansMotSeul(l.adresse ?? '')}
             </span>
           </p>
         ))}
@@ -175,13 +175,13 @@ function ContenuListe({ proposition, partir }: { proposition: Proposition; parti
   return (
     <>
       <h2 className="tiroir__titre" id="titre-tiroir">
-        {principal.lieu.nom}
+        {sansMotSeul(principal.lieu.nom)}
       </h2>
       <ul className="tiroir__liste">
         {articles.map((c) => (
           <li key={c.releve.id}>
             <span>
-              {c.releve.article}
+              {sansMotSeul(c.releve.article)}
               {c.releve.contenance_cl && ` · ${c.releve.contenance_cl} cl`}
             </span>
             <span className="plan__prix">{formaterPrix(c.releve.prix_centimes)}</span>
