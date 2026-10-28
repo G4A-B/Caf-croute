@@ -755,3 +755,13 @@
   gap: var(--espace-2);
   text-decoration: none;
 }
+
+/* Illustrations : version jour ou nuit selon le mode */
+.illu-nuit,
+:root[data-moment='nuit'] .illu-jour {
+  display: none;
+}
+
+:root[data-moment='nuit'] .illu-nuit {
+  display: block;
+}

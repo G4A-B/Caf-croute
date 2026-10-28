@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Chargement, ILLUSTRATIONS } from '../components/Illustrations.tsx'
+import { Chargement, Illustration, ILLUSTRATIONS } from '../components/Illustrations.tsx'
 import {
   IconeBiere,
   IconeCroix,
@@ -155,7 +155,7 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
         <button type="button" className="bouton-fermer" onClick={() => setParti(false)} aria-label="Fermer, revenir aux idées">
           <IconeCroix />
         </button>
-        <img src={ILLUSTRATIONS.baguette} alt="" className="plan__illu anim-marche" />
+        <Illustration paire={ILLUSTRATIONS.baguette} className="plan__illu anim-marche" />
         <p className="surtitre">C’est parti</p>
         <h1 className="grand-titre">Vite, t’as {proposition.minutes_a_pied} min pour y aller</h1>
         <div className="plan__adresses">
