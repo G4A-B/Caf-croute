@@ -121,6 +121,29 @@
   gap: var(--espace-2);
 }
 
+/* « Les deux » : sandwich et tasse composés ensemble, la tasse posée sur le sandwich */
+.carte-choix__duo {
+  position: relative;
+  width: 76px;
+  height: 56px;
+}
+
+.carte-choix__duo .picto {
+  position: absolute;
+}
+
+.carte-choix__duo .picto:first-child {
+  left: 0;
+  bottom: 6px;
+  rotate: 14deg;
+}
+
+.carte-choix__duo .picto:last-child {
+  right: 6px;
+  top: 9px;
+  rotate: -6deg;
+}
+
 .rond-fleche {
   display: inline-grid;
   place-items: center;

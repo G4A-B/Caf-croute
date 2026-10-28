@@ -84,8 +84,10 @@ export default function Accueil({ moment, basculer, choisir }: Props) {
               Café + à manger · {pluriel(nombreDeLieux('les_deux'), 'idée')}
             </span>
             <span className="carte-choix__icones">
-              <PictoSandwich hauteur={18} clair />
-              <PictoTasse hauteur={24} clair />
+              <span className="carte-choix__duo">
+                <PictoSandwich hauteur={20} clair />
+                <PictoTasse hauteur={28} clair />
+              </span>
               <span className="rond-fleche rond-fleche--clair">
                 <IconeFleche />
               </span>
