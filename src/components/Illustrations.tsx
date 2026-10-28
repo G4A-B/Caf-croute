@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react'
-import logo from '../assets/logo.svg'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import baguetteNuit from '../assets/illus/baguette-nuit.svg'
 import biereBeige from '../assets/illus/biere-beige.svg'
 import biereNoire from '../assets/illus/biere-noire.svg'
 import biereRose from '../assets/illus/biere-rose.svg'
 import trinqueClair from '../assets/illus/trinque-clair.svg'
 import baguette from '../assets/illus/baguette.svg'
-import duo from '../assets/illus/duo.svg'
 import sandwichNuit from '../assets/illus/sandwich-nuit.svg'
 import sandwich from '../assets/illus/sandwich.svg'
 import tasseBruneNuit from '../assets/illus/tasse-brune-nuit.svg'
@@ -14,6 +12,7 @@ import tasseBrune from '../assets/illus/tasse-brune.svg'
 import tasseRoseNuit from '../assets/illus/tasse-rose-nuit.svg'
 import tasseRose from '../assets/illus/tasse-rose.svg'
 import type { Mode } from '../features/plan/plan.ts'
+import { CafCrout } from '../features/splash/cafcrout-splash.js'
 
 // Illustrations de l'équipe DA, animées en CSS (voir ecrans.css, coupé si « réduire les animations »).
 // Version nuit : brun et crème échangés (fichiers *-nuit.svg), le rose ne change pas.
@@ -41,23 +40,52 @@ export function Illustration({ paire, className, delai = 0 }: { paire: Paire; cl
   )
 }
 
-// Écran de lancement : le duo tasse + sandwich, puis l'app
+// Écran de lancement : animation de l'équipe DA (src/features/splash), jouée une fois.
+// Un tap la passe. Avec « réduire les animations » : l'image finale pendant 1 s.
+const FIN_SPLASH_S = 6.55
+const FONDU_MS = 400
+
 export function Splash({ fini }: { fini: () => void }) {
+  const scene = useRef<HTMLDivElement>(null)
   const [sortie, setSortie] = useState(false)
 
-  useEffect(() => {
-    const t1 = setTimeout(() => setSortie(true), 1300)
-    const t2 = setTimeout(fini, 1700)
-    return () => {
-      clearTimeout(t1)
-      clearTimeout(t2)
-    }
+  const terminer = useCallback(() => {
+    setSortie(true)
+    setTimeout(fini, FONDU_MS)
   }, [fini])
 
+  useEffect(() => {
+    const el = scene.current
+    if (!el) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.innerHTML = CafCrout.frame(5.85)
+      const t = setTimeout(terminer, 1000)
+      return () => clearTimeout(t)
+    }
+    let image = 0
+    let debut = 0
+    const jouer = (maintenant: number) => {
+      debut ||= maintenant
+      const t = (maintenant - debut) / 1000
+      el.innerHTML = CafCrout.frame(Math.min(t, FIN_SPLASH_S))
+      if (t < FIN_SPLASH_S) image = requestAnimationFrame(jouer)
+      else terminer()
+    }
+    image = requestAnimationFrame(jouer)
+    return () => cancelAnimationFrame(image)
+  }, [terminer])
+
   return (
-    <div className={`splash${sortie ? ' splash--sortie' : ''}`} role="status" aria-label="Caf’croûte se prépare">
-      <img src={duo} alt="" className="splash__illu anim-rebond" width={255} height={193} />
-      <img src={logo} alt="Caf’croûte" className="splash__logo" width={160} height={121} />
+    <div
+      className={`splash${sortie ? ' splash--sortie' : ''}`}
+      role="img"
+      aria-label="Caf’croûte : le sandwich plonge dans le café"
+      onClick={terminer}
+    >
+      <div ref={scene} className="splash__scene" />
+      <p className="splash__passer" aria-hidden="true">
+        Touche pour passer
+      </p>
     </div>
   )
 }

@@ -17,8 +17,22 @@ const COULEUR_BARRE: Record<Moment, string> = { jour: '#fffae5', nuit: '#442d29'
 
 export default function App() {
   const [ecran, setEcran] = useState<Ecran>(() => (history.state as Ecran | null) ?? { nom: 'accueil' })
-  const [splash, setSplash] = useState(true)
-  const finSplash = useCallback(() => setSplash(false), [])
+  // Splash une fois par session : un rechargement ne le rejoue pas
+  const [splash, setSplash] = useState(() => {
+    try {
+      return !sessionStorage.getItem('splash-vu')
+    } catch {
+      return true
+    }
+  })
+  const finSplash = useCallback(() => {
+    try {
+      sessionStorage.setItem('splash-vu', '1')
+    } catch {
+      // stockage indisponible (navigation privée) : le splash reviendra, ce n'est pas grave
+    }
+    setSplash(false)
+  }, [])
   const [moment, setMoment] = useState<Moment>(() => momentDe())
   const [retournement, setRetournement] = useState<Retournement>('')
 

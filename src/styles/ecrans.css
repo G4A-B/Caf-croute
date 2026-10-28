@@ -503,14 +503,31 @@
   pointer-events: none;
 }
 
-.splash__illu {
-  width: min(70vw, 280px);
-  height: auto;
+.splash {
+  cursor: pointer;
 }
 
-.splash__logo {
-  width: 140px;
-  height: auto;
+/* Composition 420 x 780 : tient dans l'écran sans déformer */
+.splash__scene {
+  width: min(100vw, calc(100dvh * 420 / 780));
+  aspect-ratio: 420 / 780;
+}
+
+.splash__scene > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.splash__passer {
+  position: absolute;
+  bottom: var(--marge-bas);
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: var(--taille-mini);
+  /* Le splash reste crème même la nuit */
+  color: #5c4540;
 }
 
 .chargement {
