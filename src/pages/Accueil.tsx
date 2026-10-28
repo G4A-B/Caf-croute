@@ -53,8 +53,8 @@ export default function Accueil({ moment, basculer, choisir }: Props) {
         <div className="choix">
           <button type="button" className="carte-choix carte-choix--cafe" onClick={() => choisir('cafe')}>
             <span className="carte-choix__haut">
-              <PictoTasse hauteur={40} />
-              <span className="rond-fleche">
+              <PictoTasse hauteur={40} clair />
+              <span className="rond-fleche rond-fleche--clair">
                 <IconeFleche />
               </span>
             </span>
@@ -84,9 +84,9 @@ export default function Accueil({ moment, basculer, choisir }: Props) {
               Café + à manger · {pluriel(nombreDeLieux('les_deux'), 'idée')}
             </span>
             <span className="carte-choix__icones">
-              <PictoSandwich hauteur={18} clair />
-              <PictoTasse hauteur={24} clair />
-              <span className="rond-fleche rond-fleche--clair">
+              <PictoSandwich hauteur={18} />
+              <PictoTasse hauteur={24} />
+              <span className="rond-fleche">
                 <IconeFleche />
               </span>
             </span>

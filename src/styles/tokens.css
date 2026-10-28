@@ -77,10 +77,11 @@
 }
 
 /*
- * Mode nuit (voir src/features/moment/moment.ts) : le brun devient le fond, le crème le texte,
- * le rose reste en petite touche d'accent. Contraste AA vérifié.
+ * Mode nuit (voir src/features/moment/moment.ts) et univers Café : le brun devient le fond,
+ * le crème le texte, le rose reste en petite touche d'accent. Contraste AA vérifié.
  */
-:root[data-moment='nuit'] {
+:root[data-moment='nuit'],
+:root[data-univers='cafe'] {
   --couleur-fond: var(--brun);
   --couleur-surface: #553a35;
   --couleur-texte: var(--creme);
@@ -91,3 +92,18 @@
   --couleur-mise-en-avant: #62453f; /* crème dessus : 8.2:1 */
   --couleur-focus: var(--rose);
 }
+
+/* Univers À manger : fond rose, cartes crème, texte brun (brun sur rose : 7.5:1) */
+:root[data-univers='manger'] {
+  --couleur-fond: var(--rose);
+  --couleur-surface: #ffffff;
+  --couleur-texte: var(--brun);
+  --couleur-texte-secondaire: #5c4540; /* 5.2:1 sur rose, 8.4:1 sur crème */
+  --couleur-bordure: rgb(68 45 41 / 0.2);
+  --couleur-accent: var(--brun);
+  --couleur-accent-texte: var(--creme);
+  --couleur-mise-en-avant: var(--creme);
+  --couleur-focus: var(--brun);
+}
+
+/* Univers Les deux : les couleurs de base (crème) */

@@ -83,9 +83,9 @@ function CartePlan({ proposition, numero, total, partir, voirPlus }: PropsCarte)
       </h2>
       <ul className="plan__lignes">
         {proposition.manger && (
-          <Ligne choix={proposition.manger} icone={<PictoSandwich hauteur={20} />} avecLieu={deuxLieux} />
+          <Ligne choix={proposition.manger} icone={<PictoSandwich hauteur={20} clair="auto" />} avecLieu={deuxLieux} />
         )}
-        {proposition.cafe && <Ligne choix={proposition.cafe} icone={<PictoTasse hauteur={24} />} avecLieu={deuxLieux} />}
+        {proposition.cafe && <Ligne choix={proposition.cafe} icone={<PictoTasse hauteur={24} clair="auto" />} avecLieu={deuxLieux} />}
         {proposition.biere && <Ligne choix={proposition.biere} icone={<IconeBiere taille={28} />} avecLieu={false} />}
       </ul>
 
