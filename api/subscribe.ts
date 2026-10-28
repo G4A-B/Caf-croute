@@ -43,7 +43,7 @@ export async function POST(request: Request): Promise<Response> {
   const probleme = valider(corps)
   if (probleme) return Response.json({ erreur: probleme }, { status: 400 })
 
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+  if (!(process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL)) {
     return Response.json({ erreur: 'notifications pas encore activées' }, { status: 501 })
   }
 
