@@ -16,44 +16,98 @@ body {
   color: var(--couleur-texte);
   font-family: var(--police-texte);
   font-size: var(--taille-texte);
+  font-weight: var(--graisse-normale);
   line-height: var(--interligne);
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
 h2,
 h3 {
+  margin: 0;
+  font-weight: var(--graisse-titre);
   line-height: var(--interligne-titre);
+  letter-spacing: var(--approche-titre);
   text-wrap: balance;
+}
+
+p {
+  margin: 0;
 }
 
 button {
   min-height: var(--taille-tactile-min);
   min-width: var(--taille-tactile-min);
   font: inherit;
+  color: inherit;
+  cursor: pointer;
 }
 
 :focus-visible {
   outline: 3px solid var(--couleur-focus);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
-.page {
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Mise en page commune aux écrans */
+.ecran {
   min-height: 100dvh;
+  max-width: 30rem;
+  margin-inline: auto;
   padding: var(--marge-haut) var(--marge-droite) var(--marge-bas) var(--marge-gauche);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: var(--espace-2);
-  max-width: 40rem;
-  margin-inline: auto;
+  gap: var(--espace-6);
 }
 
-.page h1 {
-  margin: 0;
+.surtitre {
+  font-size: var(--taille-mini);
+  font-weight: var(--graisse-forte);
+  letter-spacing: var(--approche-surtitre);
+  text-transform: uppercase;
+  color: var(--couleur-texte-secondaire);
+}
+
+.grand-titre {
   font-size: var(--taille-grand-titre);
 }
 
-.sous-titre {
-  margin: 0;
+/* Bouton principal (« Voir les cafés », « C'est parti ») */
+.bouton-principal {
+  width: 100%;
+  min-height: 56px;
+  border: 0;
+  border-radius: var(--rayon-moyen);
+  background: var(--couleur-accent);
+  color: var(--couleur-accent-texte);
+  font-weight: var(--graisse-forte);
+}
+
+.bouton-secondaire {
+  width: 100%;
+  min-height: 52px;
+  border: 2px solid var(--couleur-accent);
+  border-radius: var(--rayon-moyen);
+  background: transparent;
+  font-weight: var(--graisse-forte);
+}
+
+.bouton-retour {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espace-1);
+  padding: 0 var(--espace-2) 0 0;
+  border: 0;
+  background: none;
   color: var(--couleur-texte-secondaire);
+  font-weight: var(--graisse-forte);
 }

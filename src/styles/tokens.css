@@ -1,48 +1,69 @@
 /*
- * Tokens PROVISOIRES : palette neutre, contraste AA.
- * L'équipe DA remplacera ces valeurs. Garder les noms de variables.
+ * Tokens Caf'croûte, d'après le logo (DA atelier octobre 2026).
+ * Brun #442d29, crème #fffae5, rose #f4b6c5. Contraste AA vérifié.
  * Interdit : orange, corail, terracotta.
  */
-:root {
-  color-scheme: light dark;
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/montserrat-latin.woff2') format('woff2');
+}
 
-  /* Couleurs */
-  --couleur-fond: #f7f7f5;
-  --couleur-surface: #ffffff;
-  --couleur-texte: #1c1c1e;          /* 16.6:1 sur le fond */
-  --couleur-texte-secondaire: #55575c; /* 7.0:1 sur le fond */
-  --couleur-bordure: #d4d5d8;
-  --couleur-accent: #2f4f6f;          /* 8.6:1 sur le fond */
-  --couleur-accent-texte: #ffffff;
-  --couleur-succes: #2e6b3f;
-  --couleur-alerte: #8a1c2b;
-  --couleur-focus: #2f4f6f;
+:root {
+  color-scheme: light;
+
+  /* Couleurs de marque */
+  --brun: #442d29;
+  --creme: #fffae5;
+  --rose: #f4b6c5;
+
+  /* Couleurs d'usage */
+  --couleur-fond: var(--creme);
+  --couleur-surface: #fffdf2;
+  --couleur-texte: var(--brun);
+  --couleur-texte-secondaire: #5c4540; /* 8.4:1 sur crème, 5.2:1 sur rose */
+  --couleur-bordure: rgb(68 45 41 / 0.18);
+  --couleur-accent: var(--brun);
+  --couleur-accent-texte: var(--creme); /* 12.1:1 */
+  --couleur-mise-en-avant: var(--rose); /* brun dessus : 7.5:1 */
+  --couleur-succes: #2f6b3a; /* 6.1:1 sur crème */
+  --couleur-succes-fond: #e3f0dc;
+  --couleur-alerte: #a3262f; /* 7.0:1 sur crème */
+  --couleur-alerte-fond: #fbe1e4;
+  --couleur-focus: var(--brun);
 
   /* Typographie */
-  --police-texte: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --police-texte: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --taille-mini: 0.75rem;
   --taille-petite: 0.875rem;
   --taille-texte: 1rem;
   --taille-moyenne: 1.25rem;
-  --taille-titre: 2rem;
+  --taille-titre: 1.75rem;
   --taille-grand-titre: 2.5rem;
   --interligne: 1.5;
-  --interligne-titre: 1.15;
-  --graisse-normale: 400;
+  --interligne-titre: 1.05;
+  --graisse-normale: 500;
   --graisse-forte: 700;
+  --graisse-titre: 800;
+  --approche-titre: -0.02em;
+  --approche-surtitre: 0.08em;
 
   /* Espacements */
   --espace-1: 0.25rem;
   --espace-2: 0.5rem;
   --espace-3: 0.75rem;
   --espace-4: 1rem;
+  --espace-5: 1.25rem;
   --espace-6: 1.5rem;
   --espace-8: 2rem;
   --espace-12: 3rem;
 
   /* Rayons */
-  --rayon-petit: 6px;
-  --rayon-moyen: 12px;
-  --rayon-grand: 20px;
+  --rayon-petit: 8px;
+  --rayon-moyen: 16px;
+  --rayon-grand: 24px;
   --rayon-rond: 999px;
 
   /* Tactile */
@@ -50,22 +71,7 @@
 
   /* Marges safe-area (encoche, barre d'accueil) */
   --marge-haut: max(var(--espace-4), env(safe-area-inset-top));
-  --marge-droite: max(var(--espace-4), env(safe-area-inset-right));
+  --marge-droite: max(var(--espace-5), env(safe-area-inset-right));
   --marge-bas: max(var(--espace-4), env(safe-area-inset-bottom));
-  --marge-gauche: max(var(--espace-4), env(safe-area-inset-left));
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --couleur-fond: #141517;
-    --couleur-surface: #1e1f22;
-    --couleur-texte: #f2f2f0;
-    --couleur-texte-secondaire: #b4b6bb;
-    --couleur-bordure: #3a3c41;
-    --couleur-accent: #a9c4de;
-    --couleur-accent-texte: #141517;
-    --couleur-succes: #8fd19e;
-    --couleur-alerte: #f2a7b1;
-    --couleur-focus: #a9c4de;
-  }
+  --marge-gauche: max(var(--espace-5), env(safe-area-inset-left));
 }
