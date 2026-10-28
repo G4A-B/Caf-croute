@@ -21,7 +21,7 @@ function heure(date: string | number): string {
 }
 
 function depuis(date: string | null): string {
-  return date ? `Signalé à ${heure(date)}. Tape sur la machine pour la signaler.` : 'Tape sur la machine pour dire si elle marche ou si elle est en panne.'
+  return date ? `Signalé à ${heure(date)}. Tape sur la machine.` : 'Tape sur la machine pour la signaler.'
 }
 
 export default function CarteMachine() {
