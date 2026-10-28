@@ -1,0 +1,56 @@
+[
+  {
+    "id": "r-0001",
+    "lieu_id": "machine-ecole",
+    "article": "Café court (EXEMPLE)",
+    "categorie": "cafe",
+    "prix_centimes": 60,
+    "date": "2026-10-27T10:05:00+01:00",
+    "releve_par": "Équipe contenu 1"
+  },
+  {
+    "id": "r-0002",
+    "lieu_id": "boulangerie-exemple",
+    "article": "Sandwich jambon beurre (EXEMPLE)",
+    "categorie": "a_manger",
+    "prix_centimes": 420,
+    "date": "2026-10-27T12:15:00+01:00",
+    "releve_par": "Équipe contenu 1"
+  },
+  {
+    "id": "r-0003",
+    "lieu_id": "boulangerie-exemple",
+    "article": "Formule sandwich + boisson (EXEMPLE)",
+    "categorie": "a_manger",
+    "prix_centimes": 650,
+    "date": "2026-10-27T12:15:00+01:00",
+    "releve_par": "Équipe contenu 1"
+  },
+  {
+    "id": "r-0004",
+    "lieu_id": "cafe-exemple",
+    "article": "Expresso à emporter (EXEMPLE)",
+    "categorie": "cafe",
+    "prix_centimes": 150,
+    "date": "2026-10-27T12:30:00+01:00",
+    "releve_par": "Équipe contenu 2"
+  },
+  {
+    "id": "r-0005",
+    "lieu_id": "supermarche-exemple",
+    "article": "Salade composée (EXEMPLE)",
+    "categorie": "a_manger",
+    "prix_centimes": 350,
+    "date": "2026-10-27T12:40:00+01:00",
+    "releve_par": "Équipe contenu 2"
+  },
+  {
+    "id": "r-0006",
+    "lieu_id": "boulangerie-exemple",
+    "article": "Sandwich jambon beurre (EXEMPLE)",
+    "categorie": "a_manger",
+    "prix_centimes": 450,
+    "date": "2026-10-28T12:05:00+01:00",
+    "releve_par": "Équipe contenu 1"
+  }
+]

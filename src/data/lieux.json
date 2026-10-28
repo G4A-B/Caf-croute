@@ -1,0 +1,26 @@
+[
+  {
+    "id": "machine-ecole",
+    "nom": "Machine à café de l'école (EXEMPLE)",
+    "type": "machine_ecole",
+    "minutes_a_pied": 0
+  },
+  {
+    "id": "boulangerie-exemple",
+    "nom": "Boulangerie du coin (EXEMPLE)",
+    "type": "boulangerie",
+    "minutes_a_pied": 4
+  },
+  {
+    "id": "cafe-exemple",
+    "nom": "Café à emporter (EXEMPLE)",
+    "type": "cafe_a_emporter",
+    "minutes_a_pied": 3
+  },
+  {
+    "id": "supermarche-exemple",
+    "nom": "Supérette (EXEMPLE)",
+    "type": "supermarche",
+    "minutes_a_pied": 7
+  }
+]
