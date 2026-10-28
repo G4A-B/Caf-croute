@@ -227,7 +227,8 @@ export default function Plan({ mode, budget, retour }: Props) {
       </button>
 
       <div>
-        <p className="surtitre" aria-live="polite">
+        {/* Masqué à l'écran, annoncé par les lecteurs d'écran quand on change de carte */}
+        <p className="visuellement-cache" aria-live="polite">
           Idée {index + 1} sur {liste.length} · budget {formaterPrix(budget)}
         </p>
         <h1 className="grand-titre">Tes idées</h1>
