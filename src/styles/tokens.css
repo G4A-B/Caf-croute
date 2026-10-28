@@ -7,7 +7,7 @@
   color-scheme: light dark;
 
   /* Couleurs */
-  --couleur-fond: #f7f7f5;
+  --couleur-fond: #ff2fbf; /* TEST rose fluo : vérification du déploiement */
   --couleur-surface: #ffffff;
   --couleur-texte: #1c1c1e;          /* 16.6:1 sur le fond */
   --couleur-texte-secondaire: #55575c; /* 7.0:1 sur le fond */
@@ -57,7 +57,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --couleur-fond: #141517;
+    --couleur-fond: #ff2fbf; /* TEST rose fluo */
     --couleur-surface: #1e1f22;
     --couleur-texte: #f2f2f0;
     --couleur-texte-secondaire: #b4b6bb;
