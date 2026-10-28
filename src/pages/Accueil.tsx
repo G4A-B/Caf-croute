@@ -1,6 +1,6 @@
 import logo from '../assets/logo.svg'
-import { IconeBiere, IconeFleche, IconeLune, IconeSoleil } from '../components/Icones.tsx'
-import { PictoSandwich, PictoTasse } from '../components/Pictos.tsx'
+import { IconeFleche, IconeLune, IconeSoleil } from '../components/Icones.tsx'
+import { PictoBiere, PictoSandwich, PictoTasse } from '../components/Pictos.tsx'
 import CarteMachine from '../features/machine/CarteMachine.tsx'
 import type { Moment } from '../features/moment/moment.ts'
 import { MINUTES_MAX, nombreDeLieux, type Mode } from '../features/plan/plan.ts'
@@ -35,7 +35,7 @@ export default function Accueil({ moment, basculer, choisir }: Props) {
         <div className="choix">
           <button type="button" className="carte-choix carte-choix--biere" onClick={() => choisir('biere')}>
             <span className="carte-choix__haut">
-              <IconeBiere />
+              <PictoBiere />
               <span className="rond-fleche">
                 <IconeFleche />
               </span>

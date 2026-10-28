@@ -1,3 +1,4 @@
+import biere from '../assets/illus/picto-biere.svg'
 import sandwichClair from '../assets/illus/picto-sandwich-clair.svg'
 import sandwich from '../assets/illus/picto-sandwich.svg'
 import tasseClair from '../assets/illus/picto-tasse-clair.svg'
@@ -12,4 +13,9 @@ export function PictoTasse({ hauteur = 44, clair = false }: Props) {
 
 export function PictoSandwich({ hauteur = 44, clair = false }: Props) {
   return <img src={clair ? sandwichClair : sandwich} alt="" className="picto" style={{ height: hauteur }} />
+}
+
+// Bière : verre crème et mousse rose, faite pour les fonds bruns (carte Bières, la nuit)
+export function PictoBiere({ hauteur = 64 }: Pick<Props, 'hauteur'>) {
+  return <img src={biere} alt="" className="picto" style={{ height: hauteur }} />
 }
