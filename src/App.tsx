@@ -14,8 +14,6 @@ type Retournement = '' | 'retournement-aller' | 'retournement-retour'
 const DEMI_TOUR_MS = 320
 
 const COULEUR_BARRE: Record<Moment, string> = { jour: '#fffae5', nuit: '#442d29' }
-// Chaque parcours a son univers de couleurs (voir tokens.css) ; « les deux » garde les couleurs de base
-const COULEUR_UNIVERS: Partial<Record<Mode, string>> = { cafe: '#442d29', manger: '#f4b6c5' }
 
 export default function App() {
   const [ecran, setEcran] = useState<Ecran>(() => (history.state as Ecran | null) ?? { nom: 'accueil' })
@@ -49,16 +47,11 @@ export default function App() {
     window.scrollTo(0, 0)
   }, [ecran])
 
-  // Couleurs du mode et de l'univers sur toute la page, barre du navigateur comprise
-  const univers = ecran.nom === 'accueil' ? null : ecran.mode
+  // Couleurs du mode sur toute la page, barre du navigateur comprise
   useEffect(() => {
-    const racine = document.documentElement
-    racine.dataset.moment = moment
-    if (univers) racine.dataset.univers = univers
-    else delete racine.dataset.univers
-    const couleur = (univers && COULEUR_UNIVERS[univers]) ?? COULEUR_BARRE[moment]
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', couleur)
-  }, [moment, univers])
+    document.documentElement.dataset.moment = moment
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', COULEUR_BARRE[moment])
+  }, [moment])
 
   const changerDeMoment = useCallback((suivant: Moment) => {
     const appliquer = () => {

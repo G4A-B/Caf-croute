@@ -57,26 +57,18 @@
   transform: scale(0.98);
 }
 
-.carte-choix--cafe {
-  border-color: transparent;
-  background: var(--brun);
-  color: var(--creme);
-}
-
-.carte-choix--cafe .carte-choix__detail {
-  color: var(--creme);
-  opacity: 0.85;
-}
-
 .carte-choix--manger {
   border-color: transparent;
-  background: var(--rose);
+  background: var(--couleur-mise-en-avant);
 }
 
 .carte-choix--deux {
   grid-column: 1 / -1;
   position: relative;
   min-height: 0;
+  border: 0;
+  background: var(--couleur-accent);
+  color: var(--couleur-accent-texte);
   padding-right: 8.5rem;
 }
 
@@ -102,6 +94,10 @@
   color: var(--couleur-texte-secondaire);
 }
 
+.carte-choix--deux .carte-choix__detail {
+  color: var(--couleur-accent-texte);
+  opacity: 0.85;
+}
 
 .carte-choix__etiquette {
   margin-bottom: var(--espace-1);
@@ -951,22 +947,18 @@
   }
 }
 
-/* Illustrations et pictos : version foncée sur fond clair, version claire sur fond foncé
-   (mode nuit et univers Café) */
+/* Illustrations : version jour ou nuit selon le mode */
 .illu-nuit,
-:root[data-moment='nuit'] .illu-jour,
-:root[data-univers='cafe'] .illu-jour {
+:root[data-moment='nuit'] .illu-jour {
   display: none;
 }
 
-:root[data-moment='nuit'] .illu-nuit,
-:root[data-univers='cafe'] .illu-nuit {
+:root[data-moment='nuit'] .illu-nuit {
   display: block;
 }
 
-/* Mode nuit et univers Café : le tiroir reste clair, posé sur la page foncée */
-:root[data-moment='nuit'] .tiroir,
-:root[data-univers='cafe'] .tiroir {
+/* Mode nuit : le tiroir reste clair, posé sur la page foncée */
+:root[data-moment='nuit'] .tiroir {
   --couleur-fond: var(--creme);
   --couleur-surface: #fffdf2;
   --couleur-texte: var(--brun);
@@ -978,13 +970,11 @@
   color: var(--couleur-texte);
 }
 
-:root[data-moment='nuit'] .tiroir .illu-jour,
-:root[data-univers='cafe'] .tiroir .illu-jour {
+:root[data-moment='nuit'] .tiroir .illu-jour {
   display: block;
 }
 
-:root[data-moment='nuit'] .tiroir .illu-nuit,
-:root[data-univers='cafe'] .tiroir .illu-nuit {
+:root[data-moment='nuit'] .tiroir .illu-nuit {
   display: none;
 }
 
@@ -995,11 +985,6 @@
   width: auto;
   max-width: 100%;
   flex: none;
-}
-
-/* Picto en double (clair="auto") : la version claire reste cachée sur fond clair */
-.picto.illu-nuit {
-  display: none;
 }
 
 /* Sur les cartes de l'accueil, le picto laisse toujours la place à la flèche */
