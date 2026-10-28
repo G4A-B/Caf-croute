@@ -44,8 +44,9 @@ export default function Budget({ mode, retour, valider }: Props) {
       </div>
 
       <div className="regle">
-        <label className="surtitre" htmlFor={idRegle}>
-          Ou fais glisser la règle
+        {/* Masqué à l'écran, lu par les lecteurs d'écran */}
+        <label className="visuellement-cache" htmlFor={idRegle}>
+          Ou règle ton budget au centime près
         </label>
         <div className="regle__ligne">
           <input
