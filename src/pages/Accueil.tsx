@@ -60,7 +60,7 @@ export default function Accueil({ moment, basculer, choisir }: Props) {
             </span>
             <span className="carte-choix__titre">Café</span>
             <span className="carte-choix__detail">
-              {pluriel(nombreDeLieux('cafe'), 'café')} à {MINUTES_MAX} min
+              {pluriel(nombreDeLieux('cafe'), 'adresse')} à {MINUTES_MAX} min
             </span>
           </button>
 
