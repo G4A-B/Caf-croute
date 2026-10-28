@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import logo from '../assets/logo.svg'
 import baguetteNuit from '../assets/illus/baguette-nuit.svg'
+import biereBeige from '../assets/illus/biere-beige.svg'
+import biereNoire from '../assets/illus/biere-noire.svg'
+import biereRose from '../assets/illus/biere-rose.svg'
+import trinqueClair from '../assets/illus/trinque-clair.svg'
 import baguette from '../assets/illus/baguette.svg'
 import duo from '../assets/illus/duo.svg'
 import sandwichNuit from '../assets/illus/sandwich-nuit.svg'
@@ -10,7 +14,6 @@ import tasseBrune from '../assets/illus/tasse-brune.svg'
 import tasseRoseNuit from '../assets/illus/tasse-rose-nuit.svg'
 import tasseRose from '../assets/illus/tasse-rose.svg'
 import type { Mode } from '../features/plan/plan.ts'
-import { IconeBiere } from './Icones.tsx'
 
 // Illustrations de l'équipe DA, animées en CSS (voir ecrans.css, coupé si « réduire les animations »).
 // Version nuit : brun et crème échangés (fichiers *-nuit.svg), le rose ne change pas.
@@ -20,7 +23,12 @@ export const ILLUSTRATIONS = {
   sandwich: { jour: sandwich, nuit: sandwichNuit },
   tasseBrune: { jour: tasseBrune, nuit: tasseBruneNuit },
   tasseRose: { jour: tasseRose, nuit: tasseRoseNuit },
+  // Bière : noire sur fond clair, beige sur fond brun
+  biere: { jour: biereNoire, nuit: biereBeige },
 } satisfies Record<string, Paire>
+
+// Bière rose (carte Bières de l'accueil, fond brun) et « trinque ! » en version claire (tiroir crème)
+export const ILLUSTRATIONS_FIXES = { biereRose, trinqueClair }
 
 // Les deux versions sont dans la page, le CSS montre celle du mode courant (pas de saut au retournement)
 export function Illustration({ paire, className, delai = 0 }: { paire: Paire; className: string; delai?: number }) {
@@ -58,7 +66,7 @@ const CHARGEMENTS: Record<Mode, { illus: Paire[]; texte: string }> = {
   cafe: { illus: [ILLUSTRATIONS.tasseRose], texte: 'On cherche ton café…' },
   manger: { illus: [ILLUSTRATIONS.sandwich], texte: 'On cherche de quoi manger…' },
   les_deux: { illus: [ILLUSTRATIONS.tasseBrune, ILLUSTRATIONS.baguette], texte: 'On assemble ta pause…' },
-  biere: { illus: [], texte: 'On cherche ta bière…' },
+  biere: { illus: [ILLUSTRATIONS.biere], texte: 'On cherche ta bière…' },
 }
 
 // Micro-chargement avant les idées
@@ -67,12 +75,6 @@ export function Chargement({ mode }: { mode: Mode }) {
   return (
     <main className="ecran chargement" role="status">
       <div className="chargement__illus">
-        {/* Provisoire : l'icône bière de l'équipe DA remplacera ce pictogramme */}
-        {illus.length === 0 && (
-          <span className="chargement__picto anim-balance">
-            <IconeBiere taille={140} />
-          </span>
-        )}
         {illus.map((paire, i) => (
           <Illustration key={paire.jour} paire={paire} className="chargement__illu anim-balance" delai={i * 0.25} />
         ))}

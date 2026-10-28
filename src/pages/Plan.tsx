@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Chargement, Illustration, ILLUSTRATIONS } from '../components/Illustrations.tsx'
+import { Chargement, Illustration, ILLUSTRATIONS, ILLUSTRATIONS_FIXES } from '../components/Illustrations.tsx'
 import {
   IconeBiere,
   IconeCroix,
@@ -98,7 +98,7 @@ function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
 // Se ferme avec la croix, un tap sur le voile ou la touche Échap.
 const DUREE_TIROIR_MS = 260
 
-// Illustration du tiroir selon le parcours (bière : pictogramme provisoire en attendant l'icône DA)
+// Illustration du tiroir selon le parcours (bière : « trinque ! », version claire pour le fond crème)
 const ILLUSTRATION_TIROIR: Record<Exclude<Mode, 'biere'>, keyof typeof ILLUSTRATIONS> = {
   cafe: 'tasseRose',
   manger: 'sandwich',
@@ -134,9 +134,7 @@ function TiroirDepart({ mode, proposition, fermer }: { mode: Mode; proposition: 
       <span className="tiroir__poignee" aria-hidden="true" />
       <div className="tiroir__illu">
         {mode === 'biere' ? (
-          <span className="tiroir__picto anim-marche">
-            <IconeBiere taille={110} />
-          </span>
+          <img src={ILLUSTRATIONS_FIXES.trinqueClair} alt="" className="plan__illu anim-balance" />
         ) : (
           <Illustration paire={ILLUSTRATIONS[ILLUSTRATION_TIROIR[mode]]} className="plan__illu anim-marche" />
         )}

@@ -668,10 +668,6 @@
   background: var(--couleur-mise-en-avant);
 }
 
-.chargement__picto {
-  display: inline-grid;
-  color: var(--couleur-texte);
-}
 
 /* Retournement de carte au passage jour / nuit */
 .scene {
@@ -783,9 +779,9 @@
   object-fit: contain;
 }
 
-.tiroir__picto {
-  display: inline-grid;
-  color: var(--couleur-texte);
+.carte-choix__illu {
+  height: 88px;
+  width: auto;
 }
 
 .bouton-fermer {

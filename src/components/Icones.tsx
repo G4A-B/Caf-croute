@@ -65,7 +65,7 @@ export function IconeMarche({ taille = 20 }: Props) {
   )
 }
 
-// Provisoire : l'équipe DA fournit l'icône bière définitive
+// Petit pictogramme pour les lignes des cartes (les illustrations bière sont dans src/assets/illus)
 export function IconeBiere({ taille = 48 }: Props) {
   return (
     <svg width={taille} height={taille} viewBox="0 0 48 48" aria-hidden="true" {...trait} strokeWidth={3}>
