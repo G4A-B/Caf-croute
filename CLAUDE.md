@@ -8,7 +8,7 @@ Projet « Caf'croûte » (dépôt Caf-croute, nom provisoire de départ : La Pau
 - Accueil : trois entrées (Café, À manger, Les deux), puis le budget, puis les cartes d'idées. Une carte sur l'accueil montre l'état de la machine à café de l'école.
 - Pas de compte. Les lieux et les prix vivent dans des fichiers JSON du dépôt (`src/data/`) : les équipes contenu les ajoutent par commit ou pull request, chaque push sur `main` les publie. Un prix `a_verifier` n'est pas proposé.
 - Mode nuit à partir de 17 h (fin à 6 h, valeurs dans `src/features/moment/moment.ts`), ou à la main avec la pastille « Mode jour / Mode nuit » : seulement les bières, couleurs inversées (fond brun, texte crème, rose en accent), l'écran se retourne comme une carte. La carte machine est masquée la nuit.
-- Seule saisie dans l'app : n'importe qui signale l'état de la machine (« Elle marche » / « En panne ») depuis la carte de l'accueil. L'état est partagé en direct via `api/machine.ts` (Upstash).
+- Seule saisie dans l'app : n'importe qui signale l'état de la machine (« Elle marche » / « En panne ») depuis la carte de l'accueil. L'état est partagé via `api/machine.ts` (Upstash) et relu toutes les 20 s. Après un signalement, personne ne peut le changer pendant 5 min (verrou atomique côté serveur, boutons grisés côté app).
 - Chaque relevé ou signalement est daté : on ajoute, on n'écrase jamais, et l'app utilise le plus récent. Un état de la machine vieux de plus de 2 h s'affiche « inconnu ».
 - Notifications push prévues : (1) la machine remarche, (2) un nouveau bon plan sous un prix choisi par l'abonné·e. La notification machine part quand quelqu'un signale « Elle marche » après « En panne » (anti-rebond 30 min) ; celle des bons plans part au déploiement de production qui les contient.
 

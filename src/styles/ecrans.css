@@ -871,3 +871,19 @@
 :root[data-moment='nuit'] .tiroir .illu-nuit {
   display: none;
 }
+
+/* Carte machine : boutons bloqués pendant 5 min après un signalement */
+.carte-machine__bouton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.carte-machine__bouton[aria-pressed='true']:disabled {
+  opacity: 1;
+}
+
+.carte-machine__verrou {
+  font-size: var(--taille-petite);
+  color: var(--couleur-texte-secondaire);
+  text-align: center;
+}

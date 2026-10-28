@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { EtatMachine, EtatMachineActuel } from '../../data/types.ts'
 import { IconeCloche } from '../../components/Icones.tsx'
 import { notificationsActivees, notificationsPossibles, sAbonner } from '../notifications/abonnement.ts'
-import { lireEtatMachine, signalerMachine } from './machine.ts'
+import { lireEtatMachine, signalerMachine, VERROU_MS, type EtatPartage } from './machine.ts'
+
+// L'état est relu régulièrement : un signalement fait sur un téléphone apparaît sur les autres
+const RAFRAICHISSEMENT_MS = 20_000
 
 const TEXTES: Record<EtatMachineActuel['etat'], { titre: string; classe: string }> = {
   marche: { titre: 'Elle marche', classe: 'carte-machine--marche' },
@@ -10,42 +13,70 @@ const TEXTES: Record<EtatMachineActuel['etat'], { titre: string; classe: string 
   inconnu: { titre: 'État inconnu', classe: 'carte-machine--inconnu' },
 }
 
+function heure(date: string | number): string {
+  return new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' }).format(new Date(date)).replace(':', ' h ')
+}
+
 function depuis(date: string | null): string {
-  if (!date) return 'Personne ne l’a encore signalée.'
-  const heure = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' }).format(new Date(date))
-  return `Signalé à ${heure.replace(':', ' h ')}`
+  return date ? `Signalé à ${heure(date)}` : 'Personne ne l’a encore signalée.'
 }
 
 export default function CarteMachine() {
-  const [etat, setEtat] = useState<EtatMachineActuel | null>(null)
+  const [partage, setPartage] = useState<EtatPartage | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const [enCours, setEnCours] = useState(false)
+  const [maintenant, setMaintenant] = useState(() => Date.now())
+
+  const charger = useCallback(() => lireEtatMachine().then(setPartage), [])
 
   useEffect(() => {
-    let actif = true
-    const charger = () => lireEtatMachine().then((e) => actif && setEtat(e))
     void charger()
-    // Rafraîchit quand on revient sur l'app
-    const auRetour = () => document.visibilityState === 'visible' && void charger()
+    const minuterie = setInterval(() => {
+      setMaintenant(Date.now())
+      if (document.visibilityState === 'visible') void charger()
+    }, RAFRAICHISSEMENT_MS)
+    // Rafraîchit aussi dès qu'on revient sur l'app
+    const auRetour = () => {
+      if (document.visibilityState !== 'visible') return
+      setMaintenant(Date.now())
+      void charger()
+    }
     document.addEventListener('visibilitychange', auRetour)
     return () => {
-      actif = false
+      clearInterval(minuterie)
       document.removeEventListener('visibilitychange', auRetour)
     }
-  }, [])
+  }, [charger])
+
+  // Débloque les boutons pile à la fin du verrou, sans attendre le prochain rafraîchissement
+  const verrouJusqua = partage?.verrouJusqua ?? null
+  useEffect(() => {
+    if (!verrouJusqua || verrouJusqua <= Date.now()) return
+    const t = setTimeout(() => {
+      setMaintenant(Date.now())
+      void charger()
+    }, verrouJusqua - Date.now() + 500)
+    return () => clearTimeout(t)
+  }, [verrouJusqua, charger])
+
+  const verrouille = verrouJusqua !== null && verrouJusqua > maintenant
 
   async function signaler(nouvel: EtatMachine) {
     setEnCours(true)
     const resultat = await signalerMachine(nouvel)
     if (resultat.ok) {
-      setEtat({ etat: resultat.dernier.etat as EtatMachine, depuis: resultat.dernier.date })
+      setPartage(resultat.partage)
       setMessage('Merci, tout le monde est au courant.')
+    } else if (resultat.raison === 'verrouille') {
+      setPartage(resultat.partage)
+      setMessage('Quelqu’un vient de la signaler. Attends un peu avant de changer.')
     } else if (resultat.raison === 'pas_encore_partage') {
-      setEtat({ etat: nouvel, depuis: new Date().toISOString() })
+      setPartage({ etat: { etat: nouvel, depuis: new Date().toISOString() }, verrouJusqua: Date.now() + VERROU_MS })
       setMessage('Noté sur ton téléphone. Le partage avec les autres arrive bientôt.')
     } else {
       setMessage('Le signalement n’est pas passé, réessaie dans un instant.')
     }
+    setMaintenant(Date.now())
     setEnCours(false)
   }
 
@@ -60,6 +91,7 @@ export default function CarteMachine() {
     )
   }
 
+  const etat = partage?.etat
   const texte = TEXTES[etat?.etat ?? 'inconnu']
 
   return (
@@ -80,7 +112,7 @@ export default function CarteMachine() {
           type="button"
           className="carte-machine__bouton"
           aria-pressed={etat?.etat === 'marche'}
-          disabled={enCours}
+          disabled={enCours || verrouille}
           onClick={() => void signaler('marche')}
         >
           Elle marche
@@ -89,12 +121,16 @@ export default function CarteMachine() {
           type="button"
           className="carte-machine__bouton"
           aria-pressed={etat?.etat === 'en_panne'}
-          disabled={enCours}
+          disabled={enCours || verrouille}
           onClick={() => void signaler('en_panne')}
         >
           En panne
         </button>
       </div>
+
+      {verrouille && (
+        <p className="carte-machine__verrou">Modifiable à partir de {heure(verrouJusqua)}</p>
+      )}
 
       {notificationsPossibles() && notificationsActivees() && etat?.etat !== 'marche' && (
         <button type="button" className="carte-machine__prevenir" onClick={() => void prevenir()}>

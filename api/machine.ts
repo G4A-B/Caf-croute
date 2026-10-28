@@ -1,6 +1,7 @@
 // /api/machine : état partagé de la machine à café de l'école.
-//   GET  : dernier signalement { dernier: { id, etat, date } | null }
-//   POST : { etat: "en_panne" | "marche" } ajoute un signalement (on n'écrase jamais)
+//   GET  : { dernier: { id, etat, date } | null, verrou_jusqua: ISO | null }
+//   POST : { etat: "en_panne" | "marche" } ajoute un signalement (on n'écrase jamais).
+//          Refusé (409) pendant 5 min après le signalement précédent : tout le monde voit le même état.
 // Stockage : Upstash Redis (voir _lib/redis.ts). Sans Upstash : 501.
 // « Elle marche » juste après « En panne » : notification aux abonné·es « machine ».
 import { abonnesA, envoyer, pushPret } from './_lib/push.js'
@@ -8,9 +9,10 @@ import { redis, stockagePret } from './_lib/redis.js'
 
 const CLE_SIGNALEMENTS = 'machine:signalements'
 const CLE_DERNIER_ENVOI = 'machine:dernier_envoi'
+const CLE_VERROU = 'machine:verrou'
 const GARDER = 200
-// Même état signalé deux fois de suite en moins de 2 min : on ne l'enregistre qu'une fois
-const DOUBLON_MS = 2 * 60 * 1000
+// Après un signalement, personne ne peut changer l'état pendant 5 min
+const VERROU_MS = 5 * 60 * 1000
 // Anti-rebond : au plus une notification machine toutes les 30 min
 const DELAI_MIN_NOTIF_MS = 30 * 60 * 1000
 const ETATS = ['en_panne', 'marche']
@@ -24,10 +26,19 @@ async function derniers(n: number): Promise<Signalement[]> {
 
 const PAS_DE_CACHE = { 'Cache-Control': 'no-store' }
 
+function verrouJusqua(dernier: Signalement | undefined, maintenant: number): string | null {
+  if (!dernier) return null
+  const fin = Date.parse(dernier.date) + VERROU_MS
+  return fin > maintenant ? new Date(fin).toISOString() : null
+}
+
 export async function GET(): Promise<Response> {
   if (!stockagePret()) return Response.json({ erreur: 'stockage pas encore branché' }, { status: 501 })
   const [dernier] = await derniers(1)
-  return Response.json({ dernier: dernier ?? null }, { headers: PAS_DE_CACHE })
+  return Response.json(
+    { dernier: dernier ?? null, verrou_jusqua: verrouJusqua(dernier, Date.now()) },
+    { headers: PAS_DE_CACHE },
+  )
 }
 
 export async function POST(request: Request): Promise<Response> {
@@ -47,8 +58,17 @@ export async function POST(request: Request): Promise<Response> {
 
   const maintenant = Date.now()
   const [precedent] = await derniers(1)
-  if (precedent && precedent.etat === etat && maintenant - Date.parse(precedent.date) < DOUBLON_MS) {
-    return Response.json({ dernier: precedent, doublon: true }, { headers: PAS_DE_CACHE })
+  // Verrou atomique : si deux personnes signalent à la même seconde, une seule passe
+  const pose = await redis<string | null>(['SET', CLE_VERROU, String(maintenant), 'NX', 'PX', String(VERROU_MS)])
+  if (pose !== 'OK') {
+    return Response.json(
+      {
+        erreur: 'état verrouillé',
+        dernier: precedent ?? null,
+        verrou_jusqua: verrouJusqua(precedent, maintenant) ?? new Date(maintenant + VERROU_MS).toISOString(),
+      },
+      { status: 409, headers: PAS_DE_CACHE },
+    )
   }
 
   const dernier: Signalement = { id: `m-${maintenant}`, etat, date: new Date(maintenant).toISOString() }
@@ -69,5 +89,8 @@ export async function POST(request: Request): Promise<Response> {
     }
   }
 
-  return Response.json({ dernier, notification }, { status: 201, headers: PAS_DE_CACHE })
+  return Response.json(
+    { dernier, verrou_jusqua: verrouJusqua(dernier, maintenant), notification },
+    { status: 201, headers: PAS_DE_CACHE },
+  )
 }

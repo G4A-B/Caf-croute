@@ -5,4 +5,5 @@ Affichage de l'état de la machine à café de l'école.
 - `CarteMachine.tsx` : carte de l'accueil. Affiche l'état et l'heure du signalement, deux boutons « Elle marche » / « En panne », et « Me prévenir quand elle remarche » si les notifications sont activées.
 - `machine.ts` : lit et signale l'état via `/api/machine` (état partagé, Upstash). Sans serveur (dev local, Upstash pas encore branché), lecture de `src/data/machine.json` et signalement gardé sur le téléphone seulement.
 - `etatMachineActuel()` (dans `src/data/index.ts`) renvoie le dernier signalement, ou « inconnu » s'il a plus de 2 h.
-- `api/machine.ts` : on ajoute chaque signalement (jamais d'écrasement), doublon ignoré s'il répète le même état en moins de 2 min. « Elle marche » juste après « En panne » déclenche la notification (anti-rebond 30 min).
+- `api/machine.ts` : on ajoute chaque signalement (jamais d'écrasement). Après un signalement, l'état est verrouillé 5 min pour tout le monde : verrou atomique `SET machine:verrou NX PX` dans Upstash, réponse 409 si quelqu'un essaie pendant ce temps.
+- La carte relit l'état toutes les 20 s et au retour sur l'app ; elle affiche « Modifiable à partir de … » pendant le verrou. « Elle marche » juste après « En panne » déclenche la notification (anti-rebond 30 min).
