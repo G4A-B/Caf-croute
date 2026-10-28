@@ -66,13 +66,13 @@ export default function CarteMachine() {
     const resultat = await signalerMachine(nouvel)
     if (resultat.ok) {
       setPartage(resultat.partage)
-      setMessage('Merci, tout le monde est au courant.')
+      setMessage(null)
     } else if (resultat.raison === 'verrouille') {
       setPartage(resultat.partage)
-      setMessage('Quelqu’un vient de la signaler. Attends un peu avant de changer.')
+      setMessage(null)
     } else if (resultat.raison === 'pas_encore_partage') {
       setPartage({ etat: { etat: nouvel, depuis: new Date().toISOString() }, verrouJusqua: Date.now() + VERROU_MS })
-      setMessage('Noté sur ton téléphone. Le partage avec les autres arrive bientôt.')
+      setMessage(null)
     } else {
       setMessage('Le signalement n’est pas passé, réessaie dans un instant.')
     }
@@ -94,6 +94,8 @@ export default function CarteMachine() {
   const etat = partage?.etat
   const texte = TEXTES[etat?.etat ?? 'inconnu']
 
+  const cloche = notificationsPossibles() && notificationsActivees()
+
   return (
     <section className={`carte-machine ${texte.classe}`} aria-labelledby="titre-machine">
       <div className="carte-machine__tete">
@@ -104,43 +106,54 @@ export default function CarteMachine() {
           <span className="carte-machine__voyant" aria-hidden="true" />
           {etat ? texte.titre : 'Chargement…'}
         </p>
-        {etat && <p className="carte-machine__depuis">{depuis(etat.depuis)}</p>}
+        {/* Pendant le verrou : l'état et l'heure où il redevient modifiable, rien d'autre */}
+        {verrouille ? (
+          <p className="carte-machine__depuis">Modifiable à partir de {heure(verrouJusqua)}</p>
+        ) : (
+          etat && <p className="carte-machine__depuis">{depuis(etat.depuis)}</p>
+        )}
       </div>
 
-      <div className="carte-machine__actions" role="group" aria-label="Signaler l’état de la machine">
+      {cloche && (
         <button
           type="button"
-          className="carte-machine__bouton"
-          aria-pressed={etat?.etat === 'marche'}
-          disabled={enCours || verrouille}
-          onClick={() => void signaler('marche')}
+          className="carte-machine__cloche"
+          onClick={() => void prevenir()}
+          aria-label="Me prévenir quand elle remarche"
+          title="Me prévenir quand elle remarche"
         >
-          Elle marche
-        </button>
-        <button
-          type="button"
-          className="carte-machine__bouton"
-          aria-pressed={etat?.etat === 'en_panne'}
-          disabled={enCours || verrouille}
-          onClick={() => void signaler('en_panne')}
-        >
-          En panne
-        </button>
-      </div>
-
-      {verrouille && (
-        <p className="carte-machine__verrou">Modifiable à partir de {heure(verrouJusqua)}</p>
-      )}
-
-      {notificationsPossibles() && notificationsActivees() && etat?.etat !== 'marche' && (
-        <button type="button" className="carte-machine__prevenir" onClick={() => void prevenir()}>
-          <IconeCloche /> Me prévenir quand elle remarche
+          <IconeCloche />
         </button>
       )}
 
-      <p className="carte-machine__message" role="status">
-        {message}
-      </p>
+      {!verrouille && (
+        <div className="carte-machine__actions" role="group" aria-label="Signaler l’état de la machine">
+          <button
+            type="button"
+            className="carte-machine__bouton"
+            aria-pressed={etat?.etat === 'marche'}
+            disabled={enCours}
+            onClick={() => void signaler('marche')}
+          >
+            Elle marche
+          </button>
+          <button
+            type="button"
+            className="carte-machine__bouton"
+            aria-pressed={etat?.etat === 'en_panne'}
+            disabled={enCours}
+            onClick={() => void signaler('en_panne')}
+          >
+            En panne
+          </button>
+        </div>
+      )}
+
+      {!verrouille && (
+        <p className="carte-machine__message" role="status">
+          {message}
+        </p>
+      )}
     </section>
   )
 }

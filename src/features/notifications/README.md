@@ -65,7 +65,7 @@ POST /api/machine  ─────────────►  api/machine.ts  �
    - `VITE_VAPID_PUBLIC_KEY` : la clé publique (lue au build par l'app, et par le serveur)
    - `VAPID_PRIVATE_KEY` : la clé privée, en « Sensitive »
 3. Redéployer : la clé publique est intégrée au moment du build.
-4. Le lien « Me prévenir quand elle remarche » apparaît alors sur la carte machine (quand elle n'est pas en état « marche »).
+4. La cloche apparaît alors en haut à droite de la carte machine.
 
 ## Reste à faire : bons plans
 

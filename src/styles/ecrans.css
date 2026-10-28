@@ -207,16 +207,21 @@
   color: var(--couleur-accent-texte);
 }
 
-.carte-machine__prevenir {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--espace-2);
+.carte-machine {
+  position: relative;
+}
+
+/* Petite cloche en haut à droite : s'abonner à « la machine remarche » */
+.carte-machine__cloche {
+  position: absolute;
+  top: var(--espace-2);
+  right: var(--espace-2);
+  display: grid;
+  place-items: center;
   border: 0;
-  background: none;
-  font-weight: var(--graisse-forte);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--couleur-texte);
 }
 
 .carte-machine__message:empty {
@@ -868,21 +873,6 @@
   display: none;
 }
 
-/* Carte machine : boutons bloqués pendant 5 min après un signalement */
-.carte-machine__bouton:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-
-.carte-machine__bouton[aria-pressed='true']:disabled {
-  opacity: 1;
-}
-
-.carte-machine__verrou {
-  font-size: var(--taille-petite);
-  color: var(--couleur-texte-secondaire);
-  text-align: center;
-}
 
 /* Pictos DA : largeur libre, hauteur fixée */
 .picto {
