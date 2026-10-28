@@ -1,4 +1,5 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Chargement, ILLUSTRATIONS } from '../components/Illustrations.tsx'
 import { IconeMarche, IconeRetour, IconeSandwich, IconeTasse } from '../components/Icones.tsx'
 import { formaterMinutes, formaterPrix } from '../lib/format.ts'
 import { propositions, type Choix, type Mode, type Proposition } from '../features/plan/plan.ts'
@@ -79,7 +80,14 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
   const liste = useMemo(() => propositions(mode, budget), [mode, budget])
   const [index, setIndex] = useState(0)
   const [parti, setParti] = useState(false)
+  const [charge, setCharge] = useState(false)
   const pile = useRef<HTMLDivElement>(null)
+
+  // Micro-chargement : laisse le temps de voir l'illustration avant les idées
+  useEffect(() => {
+    const t = setTimeout(() => setCharge(true), 900)
+    return () => clearTimeout(t)
+  }, [])
   const proposition = liste[index]
 
   // La carte visible est celle qui occupe la pile après le glissement
@@ -95,6 +103,8 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
     carte?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
     setIndex(i)
   }
+
+  if (!charge) return <Chargement mode={mode} />
 
   if (!proposition) {
     return (
@@ -114,6 +124,7 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
   if (parti) {
     return (
       <main className="ecran plan plan--parti">
+        <img src={ILLUSTRATIONS.baguette} alt="" className="plan__illu anim-marche" />
         <p className="surtitre">C’est parti</p>
         <h1 className="grand-titre">Vite, t’as {proposition.minutes_a_pied} min pour y aller</h1>
         <div className="plan__adresses">
@@ -121,7 +132,10 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
             .filter((c, i, l): c is Choix => !!c && l.findIndex((x) => x?.lieu.id === c.lieu.id) === i)
             .map((c) => (
               <p key={c.lieu.id} className="plan__adresse">
-                <IconeMarche /> <strong>{c.lieu.nom}</strong>, {c.lieu.adresse}
+                <IconeMarche />
+                <span>
+                  <strong>{c.lieu.nom}</strong>, {c.lieu.adresse}
+                </span>
               </p>
             ))}
         </div>

@@ -386,8 +386,9 @@
 }
 
 .plan__adresse {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
   gap: var(--espace-2);
 }
 
@@ -485,4 +486,134 @@
   width: 20px;
   border-radius: var(--rayon-rond);
   background: var(--couleur-accent);
+}
+
+/* Splash et micro-chargements */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--espace-6);
+  background: var(--couleur-fond);
+  transition: opacity 400ms ease;
+}
+
+.splash--sortie {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash__illu {
+  width: min(70vw, 280px);
+  height: auto;
+}
+
+.splash__logo {
+  width: 140px;
+  height: auto;
+}
+
+.chargement {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.chargement__illus {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--espace-4);
+}
+
+.chargement__illu {
+  width: min(55vw, 220px);
+  height: auto;
+}
+
+.chargement__illus:has(> :nth-child(2)) .chargement__illu {
+  width: min(38vw, 160px);
+}
+
+.chargement__texte {
+  font-size: var(--taille-moyenne);
+  font-weight: var(--graisse-forte);
+}
+
+.plan--parti .plan__illu {
+  align-self: center;
+  width: 160px;
+  height: auto;
+}
+
+/* Animations */
+@keyframes rebond {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  30% {
+    transform: translateY(-14px) rotate(-3deg);
+  }
+  60% {
+    transform: translateY(0) rotate(2deg);
+  }
+}
+
+@keyframes balance {
+  0%,
+  100% {
+    transform: rotate(-6deg) translateY(0);
+  }
+  50% {
+    transform: rotate(6deg) translateY(-8px);
+  }
+}
+
+@keyframes marche {
+  0% {
+    transform: translateX(-24px) rotate(-4deg);
+  }
+  25% {
+    transform: translateX(-12px) translateY(-6px) rotate(0);
+  }
+  50% {
+    transform: translateX(0) rotate(4deg);
+  }
+  75% {
+    transform: translateX(12px) translateY(-6px) rotate(0);
+  }
+  100% {
+    transform: translateX(24px) rotate(-4deg);
+  }
+}
+
+.anim-rebond {
+  animation: rebond 1.1s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+.anim-balance {
+  animation: balance 0.9s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+.anim-marche {
+  animation: marche 1.6s ease-in-out infinite alternate;
+  transform-origin: 50% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-rebond,
+  .anim-balance,
+  .anim-marche {
+    animation: none;
+  }
+
+  .splash {
+    transition: none;
+  }
 }

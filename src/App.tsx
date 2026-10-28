@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { Splash } from './components/Illustrations.tsx'
 import Accueil from './pages/Accueil.tsx'
 import Budget from './pages/Budget.tsx'
 import Plan from './pages/Plan.tsx'
@@ -9,6 +10,8 @@ type Ecran = { nom: 'accueil' } | { nom: 'budget'; mode: Mode } | { nom: 'plan';
 
 export default function App() {
   const [ecran, setEcran] = useState<Ecran>(() => (history.state as Ecran | null) ?? { nom: 'accueil' })
+  const [splash, setSplash] = useState(true)
+  const finSplash = useCallback(() => setSplash(false), [])
 
   useEffect(() => {
     if (!history.state) history.replaceState(ecran, '')
@@ -31,18 +34,27 @@ export default function App() {
     setEcran({ nom: 'accueil' })
   }
 
-  switch (ecran.nom) {
-    case 'accueil':
-      return <Accueil choisir={(mode) => aller({ nom: 'budget', mode })} />
-    case 'budget':
-      return (
-        <Budget
-          mode={ecran.mode}
-          retour={() => history.back()}
-          valider={(budget) => aller({ nom: 'plan', mode: ecran.mode, budget })}
-        />
-      )
-    case 'plan':
-      return <Plan mode={ecran.mode} budget={ecran.budget} retour={() => history.back()} accueil={accueil} />
+  return (
+    <>
+      {ecranCourant()}
+      {splash && <Splash fini={finSplash} />}
+    </>
+  )
+
+  function ecranCourant() {
+    switch (ecran.nom) {
+      case 'accueil':
+        return <Accueil choisir={(mode) => aller({ nom: 'budget', mode })} />
+      case 'budget':
+        return (
+          <Budget
+            mode={ecran.mode}
+            retour={() => history.back()}
+            valider={(budget) => aller({ nom: 'plan', mode: ecran.mode, budget })}
+          />
+        )
+      case 'plan':
+        return <Plan mode={ecran.mode} budget={ecran.budget} retour={() => history.back()} accueil={accueil} />
+    }
   }
 }
