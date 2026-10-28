@@ -3,7 +3,8 @@ import type { EtatMachine, EtatMachineActuel } from '../../data/types.ts'
 import { IlluMachine, type Expression } from './IlluMachine.tsx'
 
 // Mini-jeu de la carte machine : on voit son état et on peut lui taper dessus.
-// Les coups ne changent jamais l'état partagé : seul un bouton « Elle marche » / « En panne » le fait.
+// Les coups ne changent jamais l'état partagé : seuls les boutons « Elle marche » / « En panne » le font
+// (c'est le seul endroit où l'on signale l'état).
 
 // Nombre de coups avant que la machine réagisse vraiment
 const SEUIL = 8
@@ -62,9 +63,6 @@ export function JeuMachine({ etat, verrouille, finVerrou, enCours, signaler }: P
     navigator.vibrate?.(25)
   }
 
-  // Boutons proposés une fois la machine « réveillée » ou « repartie », jamais pour une machine qui marche
-  const propositions: EtatMachine[] = !reussi || etat === 'marche' ? [] : etat === 'en_panne' ? ['marche'] : ['marche', 'en_panne']
-
   return (
     <div className="jeu-machine">
       <h2 className="tiroir__titre" id="titre-jeu-machine">
@@ -88,18 +86,24 @@ export function JeuMachine({ etat, verrouille, finVerrou, enCours, signaler }: P
       </p>
       <p className="jeu-machine__message">{message}</p>
 
-      {propositions.length > 0 &&
-        (verrouille ? (
-          <p className="jeu-machine__message">Déjà signalée, modifiable à partir de {finVerrou}.</p>
-        ) : (
-          <div className="carte-machine__actions" role="group" aria-label="Signaler l’état de la machine">
-            {propositions.map((p) => (
-              <button key={p} type="button" className="carte-machine__bouton" disabled={enCours} onClick={() => signaler(p)}>
-                {p === 'marche' ? 'Elle marche' : 'En panne'}
-              </button>
-            ))}
-          </div>
-        ))}
+      {verrouille ? (
+        <p className="jeu-machine__message">Déjà signalée, modifiable à partir de {finVerrou}.</p>
+      ) : (
+        <div className="carte-machine__actions" role="group" aria-label="Signaler l’état de la machine">
+          {(['marche', 'en_panne'] as const).map((p) => (
+            <button
+              key={p}
+              type="button"
+              className="carte-machine__bouton"
+              aria-pressed={etat === p}
+              disabled={enCours}
+              onClick={() => signaler(p)}
+            >
+              {p === 'marche' ? 'Elle marche' : 'En panne'}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

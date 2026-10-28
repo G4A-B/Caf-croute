@@ -21,7 +21,7 @@ function heure(date: string | number): string {
 }
 
 function depuis(date: string | null): string {
-  return date ? `Signalé à ${heure(date)}` : 'Personne ne l’a encore signalée.'
+  return date ? `Signalé à ${heure(date)}. Tape sur la machine pour la signaler.` : 'Tape sur la machine pour dire si elle marche ou si elle est en panne.'
 }
 
 export default function CarteMachine() {
@@ -143,34 +143,9 @@ export default function CarteMachine() {
         </button>
       )}
 
-      {!verrouille && (
-        <div className="carte-machine__actions" role="group" aria-label="Signaler l’état de la machine">
-          <button
-            type="button"
-            className="carte-machine__bouton"
-            aria-pressed={etat?.etat === 'marche'}
-            disabled={enCours}
-            onClick={() => void signaler('marche')}
-          >
-            Elle marche
-          </button>
-          <button
-            type="button"
-            className="carte-machine__bouton"
-            aria-pressed={etat?.etat === 'en_panne'}
-            disabled={enCours}
-            onClick={() => void signaler('en_panne')}
-          >
-            En panne
-          </button>
-        </div>
-      )}
-
-      {!verrouille && (
-        <p className="carte-machine__message" role="status">
-          {message}
-        </p>
-      )}
+      <p className="carte-machine__message" role="status">
+        {message}
+      </p>
 
       {jeu && (
         <Tiroir titreId="titre-jeu-machine" fermeture={fermeture} fermer={fermerJeu} libelleFermer="Fermer, revenir à l’accueil">
