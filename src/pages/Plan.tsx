@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { IconeMarche, IconeRetour, IconeSandwich, IconeTasse } from '../components/Icones.tsx'
 import { formaterMinutes, formaterPrix } from '../lib/format.ts'
-import { propositions, type Choix, type Mode } from '../features/plan/plan.ts'
+import { propositions, type Choix, type Mode, type Proposition } from '../features/plan/plan.ts'
 
 const TYPES_LIEU: Record<string, string> = {
   boulangerie: 'Boulangerie',
@@ -32,13 +32,69 @@ function Ligne({ choix, icone, avecLieu }: { choix: Choix; icone: React.ReactNod
   )
 }
 
+function CartePlan({ proposition, numero, total }: { proposition: Proposition; numero: number; total: number }) {
+  const lieuPrincipal = (proposition.manger ?? proposition.cafe)!.lieu
+  const deuxLieux = !!proposition.cafe && !!proposition.manger && proposition.cafe.lieu.id !== proposition.manger.lieu.id
+
+  return (
+    <article className="carte-plan" aria-roledescription="carte" aria-label={`Idée ${numero} sur ${total}`}>
+      <p className="carte-plan__type">{deuxLieux ? 'Deux adresses' : TYPES_LIEU[lieuPrincipal.type]}</p>
+      <h2 className="carte-plan__lieu">
+        {deuxLieux ? `${proposition.manger!.lieu.nom} + ${proposition.cafe!.lieu.nom}` : lieuPrincipal.nom}
+      </h2>
+      <ul className="plan__lignes">
+        {proposition.manger && (
+          <Ligne choix={proposition.manger} icone={<IconeSandwich taille={28} />} avecLieu={deuxLieux} />
+        )}
+        {proposition.cafe && <Ligne choix={proposition.cafe} icone={<IconeTasse taille={28} />} avecLieu={deuxLieux} />}
+      </ul>
+
+      {proposition.autres.length > 0 && (
+        <div className="carte-plan__autres">
+          <p className="carte-plan__sous-titre">Aussi dans ton budget</p>
+          <ul>
+            {proposition.autres.map((c) => (
+              <li key={c.releve.id}>
+                <span>{c.releve.article}</span>
+                <span className="plan__prix">{formaterPrix(c.releve.prix_centimes)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <p className="carte-plan__pied">
+        <span>
+          <IconeMarche /> {proposition.minutes_a_pied} min à pied
+        </span>
+        <span className="carte-plan__total">{formaterPrix(proposition.total_centimes)}</span>
+      </p>
+    </article>
+  )
+}
+
 type Props = { mode: Mode; budget: number; retour: () => void; accueil: () => void }
 
 export default function Plan({ mode, budget, retour, accueil }: Props) {
   const liste = useMemo(() => propositions(mode, budget), [mode, budget])
   const [index, setIndex] = useState(0)
   const [parti, setParti] = useState(false)
-  const proposition = liste[index % Math.max(liste.length, 1)]
+  const pile = useRef<HTMLDivElement>(null)
+  const proposition = liste[index]
+
+  // La carte visible est celle qui occupe la pile après le glissement
+  function suivreGlissement() {
+    const el = pile.current
+    if (!el) return
+    const largeur = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? el.clientWidth
+    setIndex(Math.min(liste.length - 1, Math.round(el.scrollLeft / (largeur + 12))))
+  }
+
+  function allerA(i: number) {
+    const carte = pile.current?.children[i] as HTMLElement | undefined
+    carte?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+    setIndex(i)
+  }
 
   if (!proposition) {
     return (
@@ -55,16 +111,11 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
     )
   }
 
-  const lieuPrincipal = (proposition.manger ?? proposition.cafe)!.lieu
-  const deuxLieux = !!proposition.cafe && !!proposition.manger && proposition.cafe.lieu.id !== proposition.manger.lieu.id
-
   if (parti) {
     return (
       <main className="ecran plan plan--parti">
         <p className="surtitre">C’est parti</p>
-        <h1 className="grand-titre">
-          Vite, t’as {proposition.minutes_a_pied} min pour y aller
-        </h1>
+        <h1 className="grand-titre">Vite, t’as {proposition.minutes_a_pied} min pour y aller</h1>
         <div className="plan__adresses">
           {[proposition.manger, proposition.cafe]
             .filter((c, i, l): c is Choix => !!c && l.findIndex((x) => x?.lieu.id === c.lieu.id) === i)
@@ -75,7 +126,10 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
             ))}
         </div>
         <p className="plan__total-final">Total : {formaterPrix(proposition.total_centimes)}</p>
-        <button type="button" className="bouton-secondaire" onClick={accueil}>
+        <button type="button" className="bouton-secondaire" onClick={() => setParti(false)}>
+          Voir les autres idées
+        </button>
+        <button type="button" className="bouton-principal" onClick={accueil}>
           Revenir à l’accueil
         </button>
       </main>
@@ -89,37 +143,40 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
       </button>
 
       <div>
-        <p className="surtitre">
-          Idée {(index % liste.length) + 1} sur {liste.length} · budget {formaterPrix(budget)}
+        <p className="surtitre" aria-live="polite">
+          Idée {index + 1} sur {liste.length} · budget {formaterPrix(budget)}
         </p>
-        <h1 className="grand-titre">Ton plan</h1>
+        <h1 className="grand-titre">Tes idées</h1>
+        {liste.length > 1 && <p className="plan__astuce">Fais glisser les cartes pour comparer.</p>}
       </div>
 
-      <article className="carte-plan" aria-live="polite">
-        <p className="carte-plan__type">
-          {deuxLieux ? 'Deux adresses' : TYPES_LIEU[lieuPrincipal.type]}
-        </p>
-        <h2 className="carte-plan__lieu">
-          {deuxLieux ? `${proposition.manger!.lieu.nom} + ${proposition.cafe!.lieu.nom}` : lieuPrincipal.nom}
-        </h2>
-        <ul className="plan__lignes">
-          {proposition.manger && <Ligne choix={proposition.manger} icone={<IconeSandwich taille={28} />} avecLieu={deuxLieux} />}
-          {proposition.cafe && <Ligne choix={proposition.cafe} icone={<IconeTasse taille={28} />} avecLieu={deuxLieux} />}
-        </ul>
-        <p className="carte-plan__pied">
-          <span>
-            <IconeMarche /> {proposition.minutes_a_pied} min à pied
-          </span>
-          <span className="carte-plan__total">{formaterPrix(proposition.total_centimes)}</span>
-        </p>
-      </article>
+      <div className="pile" ref={pile} onScroll={suivreGlissement} aria-label="Idées de pause">
+        {liste.map((p, i) => (
+          <CartePlan key={i} proposition={p} numero={i + 1} total={liste.length} />
+        ))}
+      </div>
+
+      {liste.length > 1 && (
+        <div className="points" role="group" aria-label="Choisir une idée">
+          {liste.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              className="point"
+              aria-label={`Idée ${i + 1}`}
+              aria-current={i === index}
+              onClick={() => allerA(i)}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="plan__actions">
         <button type="button" className="bouton-principal" onClick={() => setParti(true)}>
           C’est parti
         </button>
         {liste.length > 1 && (
-          <button type="button" className="bouton-secondaire" onClick={() => setIndex((i) => i + 1)}>
+          <button type="button" className="bouton-secondaire" onClick={() => allerA((index + 1) % liste.length)}>
             Autre idée
           </button>
         )}

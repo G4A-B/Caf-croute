@@ -4,8 +4,8 @@ Projet « Caf'croûte » (dépôt Caf-croute, nom provisoire de départ : La Pau
 
 ## Principes du produit
 
-- L'app répond par UN plan (à manger + café) selon le budget et le temps de pause, avec un bouton « autre idée ». Pas de carte, pas de liste de résultats à filtrer. Les distances s'expriment en minutes à pied depuis l'entrée de l'école.
-- Accueil : trois entrées (Café, À manger, Les deux), puis le budget, puis UN plan avec « autre idée ». Une carte sur l'accueil montre l'état de la machine à café de l'école.
+- L'app répond par des cartes d'idées à faire glisser (une carte par lieu, le plus proche d'abord), avec « Autre idée » pour passer à la suivante. Chaque carte montre l'article principal et les autres articles du lieu dans le budget. Pas de plan de quartier, pas de liste à filtrer. Les distances s'expriment en minutes à pied depuis l'entrée de l'école.
+- Accueil : trois entrées (Café, À manger, Les deux), puis le budget, puis les cartes d'idées. Une carte sur l'accueil montre l'état de la machine à café de l'école.
 - Pas de compte. Les lieux et les prix vivent dans des fichiers JSON du dépôt (`src/data/`) : les équipes contenu les ajoutent par commit ou pull request, chaque push sur `main` les publie. Un prix `a_verifier` n'est pas proposé.
 - Seule saisie dans l'app : n'importe qui signale l'état de la machine (« Elle marche » / « En panne ») depuis la carte de l'accueil. L'état est partagé en direct via `api/machine.ts` (Upstash).
 - Chaque relevé ou signalement est daté : on ajoute, on n'écrase jamais, et l'app utilise le plus récent. Un état de la machine vieux de plus de 2 h s'affiche « inconnu ».

@@ -1,4 +1,4 @@
-// Calcule les propositions de pause : une à la fois, « autre idée » passe à la suivante.
+// Calcule les propositions de pause : une carte par lieu, à faire glisser.
 // Fonctions pures : pas d'interface, pas de réseau.
 import { lieux as tousLesLieux, prixFiables } from '../../data/index.ts'
 import type { Lieu, RelevePrix } from '../../data/types.ts'
@@ -16,7 +16,12 @@ export type Proposition = {
   total_centimes: number
   // Temps pour rejoindre le lieu le plus loin
   minutes_a_pied: number
+  // Les autres articles du même lieu qui rentrent dans le budget
+  autres: Choix[]
 }
+
+// Nombre maximum d'articles en plus affichés sur une carte
+export const AUTRES_MAX = 4
 
 export type Budget = { centimes: number; libelle: string }
 
@@ -65,19 +70,22 @@ function ordre(a: Proposition, b: Proposition): number {
   return a.minutes_a_pied - b.minutes_a_pied || b.total_centimes - a.total_centimes
 }
 
-// Une seule proposition par lieu : son meilleur article dans le budget
-function meilleurParLieu(choix: Choix[], budget: number): Proposition[] {
-  const parLieu = new Map<string, Choix>()
+// Une proposition par lieu : son article le plus copieux dans le budget, puis les autres
+function parLieu(choix: Choix[], budget: number): Proposition[] {
+  const groupes = new Map<string, Choix[]>()
   for (const c of choix) {
     if (c.releve.prix_centimes > budget) continue
-    const actuel = parLieu.get(c.lieu.id)
-    if (!actuel || c.releve.prix_centimes > actuel.releve.prix_centimes) parLieu.set(c.lieu.id, c)
+    groupes.set(c.lieu.id, [...(groupes.get(c.lieu.id) ?? []), c])
   }
-  return [...parLieu.values()].map((c) => ({
-    [c.releve.categorie === 'cafe' ? 'cafe' : 'manger']: c,
-    total_centimes: c.releve.prix_centimes,
-    minutes_a_pied: c.lieu.minutes_a_pied,
-  }))
+  return [...groupes.values()].map((liste) => {
+    const [principal, ...autres] = liste.sort((a, b) => b.releve.prix_centimes - a.releve.prix_centimes)
+    return {
+      [principal.releve.categorie === 'cafe' ? 'cafe' : 'manger']: principal,
+      total_centimes: principal.releve.prix_centimes,
+      minutes_a_pied: principal.lieu.minutes_a_pied,
+      autres: autres.slice(0, AUTRES_MAX),
+    }
+  })
 }
 
 function minutesDuo(manger: Choix, cafe: Choix): number {
@@ -104,6 +112,7 @@ function duos(cafes: Choix[], plats: Choix[], budget: number): Proposition[] {
       cafe,
       total_centimes: manger.releve.prix_centimes + cafe.releve.prix_centimes,
       minutes_a_pied: minutesDuo(manger, cafe),
+      autres: [],
     }
     const actuelle = parLieu.get(manger.lieu.id)
     if (!actuelle || manger.releve.prix_centimes > actuelle.manger!.releve.prix_centimes) {
@@ -122,9 +131,9 @@ export function propositions(
   const plats = choixProches('a_manger', donnees)
   const liste =
     mode === 'cafe'
-      ? meilleurParLieu(cafes, budget)
+      ? parLieu(cafes, budget)
       : mode === 'manger'
-        ? meilleurParLieu(plats, budget)
+        ? parLieu(plats, budget)
         : duos(cafes, plats, budget)
   return liste.sort(ordre)
 }

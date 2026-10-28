@@ -394,3 +394,95 @@
 .plan__total-final {
   font-weight: var(--graisse-forte);
 }
+
+/* Pile de cartes à faire glisser */
+.plan__astuce {
+  margin-top: var(--espace-2);
+  font-size: var(--taille-petite);
+  color: var(--couleur-texte-secondaire);
+}
+
+.pile {
+  display: flex;
+  gap: 12px;
+  margin-inline: calc(-1 * var(--marge-gauche)) calc(-1 * var(--marge-droite));
+  padding-inline: var(--marge-gauche) var(--marge-droite);
+  scroll-padding-inline: var(--marge-gauche);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.pile::-webkit-scrollbar {
+  display: none;
+}
+
+.pile .carte-plan {
+  flex: 0 0 calc(100% - var(--espace-8));
+  align-content: start;
+  scroll-snap-align: start;
+}
+
+.carte-plan__autres {
+  display: grid;
+  gap: var(--espace-2);
+}
+
+.carte-plan__sous-titre {
+  font-size: var(--taille-mini);
+  font-weight: var(--graisse-forte);
+  letter-spacing: var(--approche-surtitre);
+  text-transform: uppercase;
+}
+
+.carte-plan__autres ul {
+  display: grid;
+  gap: var(--espace-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--taille-petite);
+}
+
+.carte-plan__autres li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espace-3);
+  padding-block: var(--espace-1);
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.carte-plan .carte-plan__pied {
+  margin-top: auto;
+}
+
+.points {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+/* Zone tactile de 44 px, pastille visible de 8 px */
+.point {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: none;
+  padding: 0;
+}
+
+.point::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--couleur-bordure);
+}
+
+.point[aria-current='true']::before {
+  width: 20px;
+  border-radius: var(--rayon-rond);
+  background: var(--couleur-accent);
+}
