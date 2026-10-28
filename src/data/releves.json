@@ -207,8 +207,6 @@
     "date": "2026-10-28T12:55:00+01:00",
     "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
     "type_cafe": "expresso",
-    "a_verifier": true,
-    "remarque": "Nom du bar à confirmer",
     "releve_par": "Équipe contenu"
   },
   {
@@ -220,8 +218,6 @@
     "date": "2026-10-28T12:55:00+01:00",
     "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
     "type_cafe": "allonge",
-    "a_verifier": true,
-    "remarque": "Nom du bar à confirmer",
     "releve_par": "Équipe contenu"
   },
   {
@@ -233,8 +229,6 @@
     "date": "2026-10-28T12:55:00+01:00",
     "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
     "type_cafe": "creme",
-    "a_verifier": true,
-    "remarque": "Nom du bar à confirmer",
     "releve_par": "Équipe contenu"
   },
   {
@@ -246,8 +240,6 @@
     "date": "2026-10-28T12:55:00+01:00",
     "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
     "type_cafe": "au_lait",
-    "a_verifier": true,
-    "remarque": "Nom du bar à confirmer",
     "releve_par": "Équipe contenu"
   },
   {
@@ -863,6 +855,171 @@
     "prix_centimes": 890,
     "date": "2026-10-28T12:55:00+01:00",
     "source": "photo:image-20261028-125123-b1ac2bca_8711.jpeg",
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0080",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "Tuborg blonde pression",
+    "categorie": "biere",
+    "prix_centimes": 320,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 25,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0081",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "Tuborg blonde pression",
+    "categorie": "biere",
+    "prix_centimes": 450,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 33,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0082",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "Tuborg blonde pression",
+    "categorie": "biere",
+    "prix_centimes": 600,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 50,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0083",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "Grimbergen blonde pression",
+    "categorie": "biere",
+    "prix_centimes": 430,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 25,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0084",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "Grimbergen blonde pression",
+    "categorie": "biere",
+    "prix_centimes": 620,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 33,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0085",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "Grimbergen blonde pression",
+    "categorie": "biere",
+    "prix_centimes": 810,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 50,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0086",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "Lancelot triple pression",
+    "categorie": "biere",
+    "prix_centimes": 450,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 25,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0087",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "Lancelot triple pression",
+    "categorie": "biere",
+    "prix_centimes": 630,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 33,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0088",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "Lancelot triple pression",
+    "categorie": "biere",
+    "prix_centimes": 820,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 50,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0089",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "1664 blanche pression",
+    "categorie": "biere",
+    "prix_centimes": 430,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 25,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0090",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "1664 blanche pression",
+    "categorie": "biere",
+    "prix_centimes": 620,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 33,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0091",
+    "lieu_id": "halles-cote-et-vin",
+    "article": "1664 blanche pression",
+    "categorie": "biere",
+    "prix_centimes": 810,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-130102-1d4f787f_8646.jpeg",
+    "contenance_cl": 50,
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0092",
+    "lieu_id": "roadside",
+    "article": "Budweiser",
+    "categorie": "biere",
+    "prix_centimes": 400,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-125200-9216d260_5688.jpeg",
+    "remarque": "+1,50 € dans un menu",
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0093",
+    "lieu_id": "roadside",
+    "article": "Skummen blonde, Storlok IPA ou bière locale",
+    "categorie": "biere",
+    "prix_centimes": 500,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-125200-9216d260_5688.jpeg",
+    "remarque": "+2,50 € dans un menu",
+    "releve_par": "Équipe contenu"
+  },
+  {
+    "id": "r-0094",
+    "lieu_id": "gang",
+    "article": "Bière Domani",
+    "categorie": "biere",
+    "prix_centimes": 500,
+    "date": "2026-10-28T12:55:00+01:00",
+    "source": "photo:image-20261028-125705-cfbe1957_8793.jpeg",
+    "contenance_cl": 33,
     "releve_par": "Équipe contenu"
   }
 ]

@@ -13,11 +13,11 @@ Pour chaque article :
 | Adresse | 13 rue Vasselot | facultatif mais utile |
 | Minutes à pied | 4 | depuis l'**entrée de l'école**, à pas normal, aller simple |
 | Article | Sandwich jambon beurre | tel qu'affiché sur place (80 caractères max) |
-| Catégorie | a_manger | `a_manger`, `cafe`, `autre` |
+| Catégorie | a_manger | `a_manger`, `cafe`, `biere`, `autre` |
 | Prix | 4,50 € | à noter en centimes : 450 |
 | Date et heure | 28/10/2026 à 12 h 15 | à noter au format `2026-10-28T12:15:00+01:00` |
 
-Pour un café, notez aussi son type (`type_cafe`) : `expresso`, `double`, `allonge`, `creme`, `au_lait`, `specialite` ou `glace`. Si le prix change entre comptoir et salle, faites deux relevés avec `consommation` : `comptoir`, `salle` ou `emporter`.
+Pour un café, notez aussi son type (`type_cafe`) : `expresso`, `double`, `allonge`, `creme`, `au_lait`, `specialite` ou `glace`. Pour une bière, notez la contenance en cl (`contenance_cl` : 25, 33, 50...). Si le prix change entre comptoir et salle, faites deux relevés avec `consommation` : `comptoir`, `salle` ou `emporter`.
 
 Notez aussi d'où vient le prix (`source`) : `photo:<nom du fichier>`, `note:<auteur>`, `benchmark:<site>` ou `terrain`, et le nom de votre équipe (`releve_par`). Un prix pas sûr (lu de loin, trouvé sur le web) prend `"a_verifier": true` : l'app ne le propose pas tant qu'il n'est pas confirmé.
 

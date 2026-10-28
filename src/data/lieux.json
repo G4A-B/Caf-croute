@@ -29,7 +29,7 @@
   },
   {
     "id": "halles-cote-et-vin",
-    "nom": "Côté & Vin (Halles centrales)",
+    "nom": "Côté & Vin (Halles)",
     "type": "bar",
     "minutes_a_pied": 2,
     "adresse": "Halles centrales, place Honoré Commeurec"
