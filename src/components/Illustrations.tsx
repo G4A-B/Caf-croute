@@ -91,7 +91,7 @@ export function Splash({ fini }: { fini: () => void }) {
 }
 
 const CHARGEMENTS: Record<Mode, { illus: Paire[]; texte: string }> = {
-  cafe: { illus: [ILLUSTRATIONS.tasseRose], texte: 'On cherche ton café…' },
+  cafe: { illus: [ILLUSTRATIONS.tasseBrune], texte: 'On cherche ton café…' },
   manger: { illus: [ILLUSTRATIONS.sandwich], texte: 'On cherche de quoi manger…' },
   les_deux: { illus: [ILLUSTRATIONS.tasseBrune, ILLUSTRATIONS.baguette], texte: 'On assemble ta pause…' },
   biere: { illus: [ILLUSTRATIONS.biere], texte: 'On cherche ta bière…' },
