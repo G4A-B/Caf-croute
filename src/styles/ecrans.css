@@ -997,6 +997,11 @@
   flex: none;
 }
 
+/* Picto en double (clair="auto") : la version claire reste cachée sur fond clair */
+.picto.illu-nuit {
+  display: none;
+}
+
 /* Sur les cartes de l'accueil, le picto laisse toujours la place à la flèche */
 .carte-choix__haut {
   gap: var(--espace-2);
