@@ -83,9 +83,6 @@ export function Splash({ fini }: { fini: () => void }) {
       onClick={terminer}
     >
       <div ref={scene} className="splash__scene" />
-      <p className="splash__passer" aria-hidden="true">
-        Touche pour passer
-      </p>
     </div>
   )
 }

@@ -588,17 +588,6 @@
   height: 100%;
 }
 
-.splash__passer {
-  position: absolute;
-  bottom: var(--marge-bas);
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: var(--taille-mini);
-  /* Le splash reste crème même la nuit */
-  color: #5c4540;
-}
-
 .chargement {
   justify-content: center;
   align-items: center;

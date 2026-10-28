@@ -1,6 +1,6 @@
 /*
  * Animation du splash Caf'croûte, fournie par l'équipe DA (cafcrout-splash-code.html).
- * Logo en tracés SVG ; tasse brune et baguette validées par la DA, recalées sur la chorégraphie d'origine. Durée totale 7,6 s, composition 420 x 780.
+ * Logo en tracés SVG, sans cœur, phrases ni points (on garde l'illustration seule) ; tasse brune et baguette validées par la DA, recalées sur la chorégraphie d'origine. Durée totale 7,6 s, composition 420 x 780.
  * frame(t) renvoie le SVG de l'image à l'instant t (en secondes).
  */
 export const CafCrout = (() => {
@@ -62,8 +62,6 @@ export const CafCrout = (() => {
     const steam=visible*(1-span(t,3.05,3.7)+span(t,4.65,5.35))*.6;
     const steamY=-9*Math.sin(t*2.25);
     const phase=t<1.8?'logo':t<3.45?'rencontre':t<5.15?'plongeon':t<6.55?'pause':'retour';
-    const captionOut=span(t,1.55,1.9), captionIn=span(t,2.45,2.9)*(1-span(t,6.55,6.9));
-    const initialCaption=(1-captionOut)+span(t,7.12,7.6);
     const blink=0;
     const cupFace=blink>.1?`<path d="M450 486 Q518 517 580 477 M694 478 Q766 504 828 458" fill="none" stroke="#422f2b" stroke-width="8" stroke-linecap="round"/>${A.cupMouth}`:A.cupFace;
     const cupTransform=`translate(${n(cupX)} ${n(cupY)}) rotate(${n(cupRot)}) scale(${n(.34*(2-squash))} ${n(.34*squash)}) translate(-620 -500)`;
@@ -104,14 +102,8 @@ export const CafCrout = (() => {
       <g opacity="${n(sparkleOpacity)}">
         ${star(318,315,n(.75+.1*Math.sin(t*5)),n(t*9),'#f4b6c5')}
         ${star(100,362,n(.5+.1*Math.sin(t*5+2)),n(-t*12),'#442d29',.7)}
-        <path d="M310 375c-8-9-17-1-10 6l10 9 10-9c7-7-2-15-10-6Z" fill="#f4b6c5" transform="translate(0 ${n(-2*Math.sin(t*3))})"/>
       </g>
       <g transform="translate(${n(logoX)} ${n(logoY)}) rotate(${n(logoRot)}) scale(${n(logoScale)}) translate(-250 -188.955)">${A.logo}</g>
-      <g fill="#442d29" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" letter-spacing="2.1">
-        <text x="210" y="${n(545+8*(1-initialCaption))}" opacity="${n(initialCaption)}">LA PAUSE A DU BON.</text>
-        <text x="210" y="${n(656+8*(1-captionIn))}" opacity="${n(captionIn)}">ENCORE MEILLEUR ENSEMBLE.</text>
-      </g>
-      <g fill="#442d29" opacity=".46">${[0,1,2].map(i=>`<circle cx="${201+i*9}" cy="724" r="1.7" opacity="${n(.3+.7*(.5+.5*Math.sin(t*3.6-i*.8)))}"/>`).join('')}</g>
     </svg>`;
   }
   return {frame,DURATION};
