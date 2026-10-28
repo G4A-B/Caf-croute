@@ -882,10 +882,22 @@
   width: auto;
 }
 
+.tiroir__tete {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin: calc(-1 * var(--espace-3)) calc(-1 * var(--marge-droite)) calc(-1 * var(--espace-3)) calc(-1 * var(--marge-gauche));
+  padding: var(--espace-2) var(--espace-3) var(--espace-2) var(--marge-gauche);
+  background: var(--couleur-fond);
+}
+
+.tiroir__tete .tiroir__poignee {
+  grid-column: 2;
+}
+
 .bouton-fermer {
-  position: absolute;
-  top: var(--espace-3);
-  right: var(--espace-3);
+  grid-column: 3;
+  justify-self: end;
   display: grid;
   place-items: center;
   border: 0;
@@ -991,4 +1003,20 @@
   display: grid;
   place-items: center;
   min-width: 40px;
+}
+
+/* Bouton du bas du tiroir : reste visible quand la liste défile */
+.tiroir__action {
+  position: sticky;
+  bottom: calc(-1 * var(--marge-bas));
+  z-index: 1;
+  margin-inline: calc(-1 * var(--marge-gauche)) calc(-1 * var(--marge-droite));
+  margin-bottom: calc(-1 * var(--marge-bas));
+  padding: var(--espace-3) var(--marge-droite) var(--marge-bas) var(--marge-gauche);
+  background: var(--couleur-fond);
+  box-shadow: 0 -8px 16px var(--couleur-fond);
+}
+
+.tiroir__action > * {
+  width: 100%;
 }

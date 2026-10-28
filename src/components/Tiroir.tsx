@@ -27,10 +27,13 @@ export function Tiroir({ titreId, fermeture, fermer, children }: Props) {
     <div className={`tiroir-scene${fermeture ? ' tiroir-scene--fermeture' : ''}`}>
       <div className="tiroir-voile" onClick={fermer} aria-hidden="true" />
       <div ref={tiroir} className="tiroir" role="dialog" aria-modal="true" aria-labelledby={titreId} tabIndex={-1}>
-        <button type="button" className="bouton-fermer" onClick={fermer} aria-label="Fermer, revenir aux idées">
-          <IconeCroix />
-        </button>
-        <span className="tiroir__poignee" aria-hidden="true" />
+        {/* En-tête : poignée au centre, croix à droite (défile avec le contenu) */}
+        <div className="tiroir__tete">
+          <span className="tiroir__poignee" aria-hidden="true" />
+          <button type="button" className="bouton-fermer" onClick={fermer} aria-label="Fermer, revenir aux idées">
+            <IconeCroix />
+          </button>
+        </div>
         {children}
       </div>
     </div>

@@ -159,9 +159,11 @@ function ContenuDepart({ mode, proposition }: { mode: Mode; proposition: Proposi
         ))}
       </div>
       <p className="plan__total-final">Total : {formaterPrix(proposition.total_centimes)}</p>
-      <a className="bouton-principal bouton-lien" href={lienGoogleMaps(lieux)} target="_blank" rel="noopener noreferrer">
-        <IconeRepere /> Ouvrir dans Google Maps
-      </a>
+      <div className="tiroir__action">
+        <a className="bouton-principal bouton-lien" href={lienGoogleMaps(lieux)} target="_blank" rel="noopener noreferrer">
+          <IconeRepere /> Ouvrir dans Google Maps
+        </a>
+      </div>
     </>
   )
 }
@@ -172,7 +174,6 @@ function ContenuListe({ proposition, partir }: { proposition: Proposition; parti
   const articles = [principal, ...proposition.autres]
   return (
     <>
-      <p className="surtitre">Dans ton budget</p>
       <h2 className="tiroir__titre" id="titre-tiroir">
         {principal.lieu.nom}
       </h2>
@@ -187,9 +188,11 @@ function ContenuListe({ proposition, partir }: { proposition: Proposition; parti
           </li>
         ))}
       </ul>
-      <button type="button" className="bouton-principal" onClick={partir}>
-        C’est parti
-      </button>
+      <div className="tiroir__action">
+        <button type="button" className="bouton-principal" onClick={partir}>
+          C’est parti
+        </button>
+      </div>
     </>
   )
 }
