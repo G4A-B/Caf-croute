@@ -62,7 +62,7 @@ La carte de l'accueil montre l'état de la machine de l'école. N'importe qui pe
 
 ## PWA et notifications
 
-L'app s'installe sur l'écran d'accueil (manifest + service worker). Les notifications push sont prêtes côté app mais pas encore envoyées : voir [src/features/notifications/README.md](src/features/notifications/README.md).
+L'app s'installe sur l'écran d'accueil (manifest + service worker). La notification « la machine remarche » est en place (clés VAPID à ajouter sur Vercel). Celle des bons plans reste à brancher. Détails : [src/features/notifications/README.md](src/features/notifications/README.md).
 
 **Sur iPhone, les notifications ne marchent que si l'app est installée sur l'écran d'accueil** (Safari > Partager > Sur l'écran d'accueil, iOS 16.4 ou plus).
 

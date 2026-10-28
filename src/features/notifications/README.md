@@ -1,6 +1,6 @@
 # src/features/notifications
 
-Notifications push. Tout est prêt côté app, rien n'est envoyé pour l'instant.
+Notifications push. « La machine remarche » est branchée de bout en bout. « Bon plan » est prêt côté calcul, l'envoi reste à brancher.
 
 ## Deux sujets
 
@@ -20,7 +20,7 @@ POST /api/subscribe  ───────────►  api/subscribe.ts  ─
 clic « Elle marche » (carte machine)
 POST /api/machine  ─────────────►  api/machine.ts  ─────────────────►  machine:signalements
                                    remarche après panne ? anti-rebond 30 min
-                                   web-push (à brancher) ───► abonné·es « machine »
+                                   web-push ───► abonné·es « machine »
 
 Équipe contenu : commit sur main
                                    déploiement de production
@@ -43,9 +43,11 @@ POST /api/machine  ─────────────►  api/machine.ts  �
 | `calcul.ts` | `calculerEnvois()` : décide qui prévenir, fonction pure |
 | `types.ts` | types partagés, délai anti-rebond |
 | `../../sw.ts` | reçoit le push, affiche la notification, ouvre `url` au clic |
-| `../../../api/subscribe.ts` | squelette : valide la demande |
+| `../../../api/subscribe.ts` | valide la demande, enregistre l'abonnement dans Upstash |
 | `../../../api/notify.ts` | squelette : vérifie la signature du webhook (bons plans) |
-| `../../../api/machine.ts` | état partagé de la machine, décide la notification « remarche » |
+| `../../../api/machine.ts` | état partagé de la machine, envoie « la machine remarche » |
+| `../../../api/_lib/push.ts` | abonnements (`abonnement:<id>`, `abonnes:<sujet>`) et envoi `web-push` |
+| `../../../api/_lib/redis.ts` | appel à Upstash par son API REST |
 
 ## Règles
 
@@ -56,10 +58,17 @@ POST /api/machine  ─────────────►  api/machine.ts  �
 - Abonnement qui répond 404 ou 410 à l'envoi : supprimé.
 - iPhone : les notifications ne marchent que si l'app est installée sur l'écran d'accueil (iOS 16.4 ou plus).
 
-## Pour brancher l'envoi (étape notifications)
+## Mise en service
 
-1. Générer les clés VAPID : `npx web-push generate-vapid-keys`. Publique dans `VITE_VAPID_PUBLIC_KEY`, privée dans `VAPID_PRIVATE_KEY` (Vercel uniquement).
-2. Vercel > Storage > Marketplace > Upstash Redis : crée `UPSTASH_REDIS_REST_URL` et `UPSTASH_REDIS_REST_TOKEN`.
-3. `npm install web-push @upstash/redis` puis compléter les `TODO` de `api/subscribe.ts` et `api/notify.ts`.
-4. Vercel > Settings > Webhooks : événement `deployment.succeeded`, URL `https://<site>/api/notify`. Copier le secret du webhook dans `NOTIFY_SECRET`.
-5. Placer `<BoutonNotifications />` dans l'écran voulu.
+1. Clés VAPID : générées dans `.env` (jamais commité). Pour en refaire : `npx web-push generate-vapid-keys`.
+2. Vercel > Settings > Environment Variables, pour Production et Preview :
+   - `VITE_VAPID_PUBLIC_KEY` : la clé publique (lue au build par l'app, et par le serveur)
+   - `VAPID_PRIVATE_KEY` : la clé privée, en « Sensitive »
+3. Redéployer : la clé publique est intégrée au moment du build.
+4. Le lien « Me prévenir quand elle remarche » apparaît alors sur la carte machine (quand elle n'est pas en état « marche »).
+
+## Reste à faire : bons plans
+
+- `api/notify.ts` : lire l'état dans Upstash, appeler `calculerEnvois()`, envoyer avec `envoyer()` de `api/_lib/push.ts`.
+- Déclencheur : webhook Vercel `deployment.succeeded` vers `/api/notify` (secret dans `NOTIFY_SECRET`).
+- Placer `<BoutonNotifications />` (choix du seuil) dans un écran.

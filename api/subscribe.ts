@@ -1,11 +1,7 @@
-// POST /api/subscribe : enregistre un abonnement push.
-// SQUELETTE : valide la demande mais ne stocke rien tant qu'Upstash n'est pas branché.
-// Étape suivante (voir src/features/notifications/README.md) :
-//   1. ajouter Upstash Redis depuis le Marketplace Vercel (crée UPSTASH_REDIS_REST_URL et _TOKEN)
-//   2. npm install @upstash/redis
-//   3. stocker l'abonnement sous la clé `abonnement:<endpoint>`
+// POST /api/subscribe : enregistre (ou met à jour) un abonnement push dans Upstash.
+import { enregistrer, SUJETS, type Abonnement, type Sujet } from './_lib/push.js'
+import { stockagePret } from './_lib/redis.js'
 
-const SUJETS = ['machine', 'bons_plans']
 const MAX_CORPS = 4096
 
 type Corps = {
@@ -22,7 +18,11 @@ function valider(corps: Corps): string | null {
   const s = corps.subscription
   if (!s || !texteCourt(s.endpoint, 1000) || !s.endpoint.startsWith('https://')) return 'endpoint invalide'
   if (!texteCourt(s.keys?.p256dh, 200) || !texteCourt(s.keys?.auth, 100)) return 'clés invalides'
-  if (!Array.isArray(corps.sujets) || corps.sujets.length === 0 || !corps.sujets.every((x) => SUJETS.includes(x)))
+  if (
+    !Array.isArray(corps.sujets) ||
+    corps.sujets.length === 0 ||
+    !corps.sujets.every((x) => (SUJETS as readonly unknown[]).includes(x))
+  )
     return 'sujets invalides'
   const seuil = corps.seuil_centimes
   if (seuil !== null && !(Number.isInteger(seuil) && (seuil as number) >= 20 && (seuil as number) <= 2000))
@@ -43,10 +43,16 @@ export async function POST(request: Request): Promise<Response> {
   const probleme = valider(corps)
   if (probleme) return Response.json({ erreur: probleme }, { status: 400 })
 
-  if (!(process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL)) {
-    return Response.json({ erreur: 'notifications pas encore activées' }, { status: 501 })
-  }
+  if (!stockagePret()) return Response.json({ erreur: 'notifications pas encore activées' }, { status: 501 })
 
-  // TODO étape notifications : enregistrer dans Upstash avec created_at
-  return Response.json({ erreur: 'stockage pas encore branché' }, { status: 501 })
+  const abonnement: Abonnement = {
+    endpoint: corps.subscription!.endpoint as string,
+    p256dh: corps.subscription!.keys!.p256dh as string,
+    auth: corps.subscription!.keys!.auth as string,
+    sujets: corps.sujets as Sujet[],
+    seuil_centimes: (corps.seuil_centimes as number | null) ?? null,
+    created_at: new Date().toISOString(),
+  }
+  await enregistrer(abonnement)
+  return Response.json({ ok: true }, { status: 201 })
 }

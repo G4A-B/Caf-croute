@@ -1,8 +1,10 @@
 // /api/machine : état partagé de la machine à café de l'école.
 //   GET  : dernier signalement { dernier: { id, etat, date } | null }
 //   POST : { etat: "en_panne" | "marche" } ajoute un signalement (on n'écrase jamais)
-// Stockage : Upstash Redis via son API REST (pas de dépendance). Sans Upstash : 501.
-// Notification « la machine remarche » : décidée ici, envoi à brancher (voir src/features/notifications/README.md).
+// Stockage : Upstash Redis (voir _lib/redis.ts). Sans Upstash : 501.
+// « Elle marche » juste après « En panne » : notification aux abonné·es « machine ».
+import { abonnesA, envoyer, pushPret } from './_lib/push.js'
+import { redis, stockagePret } from './_lib/redis.js'
 
 const CLE_SIGNALEMENTS = 'machine:signalements'
 const CLE_DERNIER_ENVOI = 'machine:dernier_envoi'
@@ -15,27 +17,9 @@ const ETATS = ['en_panne', 'marche']
 
 type Signalement = { id: string; etat: string; date: string }
 
-// L'intégration Vercel nomme les variables KV_REST_API_* ; Upstash en direct, UPSTASH_REDIS_REST_*
-const URL_REDIS = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL
-const JETON_REDIS = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN
-
-async function redis(commande: string[]): Promise<unknown> {
-  const reponse = await fetch(URL_REDIS!, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${JETON_REDIS}` },
-    body: JSON.stringify(commande),
-  })
-  if (!reponse.ok) throw new Error(`Upstash ${reponse.status}`)
-  return ((await reponse.json()) as { result: unknown }).result
-}
-
 async function derniers(n: number): Promise<Signalement[]> {
-  const brut = (await redis(['LRANGE', CLE_SIGNALEMENTS, '0', String(n - 1)])) as string[]
+  const brut = await redis<string[]>(['LRANGE', CLE_SIGNALEMENTS, '0', String(n - 1)])
   return brut.map((s) => JSON.parse(s) as Signalement)
-}
-
-function stockagePret(): boolean {
-  return Boolean(URL_REDIS && JETON_REDIS)
 }
 
 const PAS_DE_CACHE = { 'Cache-Control': 'no-store' }
@@ -72,13 +56,16 @@ export async function POST(request: Request): Promise<Response> {
   await redis(['LTRIM', CLE_SIGNALEMENTS, '0', String(GARDER - 1)])
 
   // La machine remarche après une panne : prévenir les abonné·es (anti-rebond 30 min)
-  let notification: 'aucune' | 'a_envoyer' = 'aucune'
-  if (etat === 'marche' && precedent?.etat === 'en_panne') {
-    const dernierEnvoi = Number((await redis(['GET', CLE_DERNIER_ENVOI])) ?? 0)
+  let notification: { envoyees: number; supprimees: number } | null = null
+  if (etat === 'marche' && precedent?.etat === 'en_panne' && pushPret()) {
+    const dernierEnvoi = Number((await redis<string | null>(['GET', CLE_DERNIER_ENVOI])) ?? 0)
     if (maintenant - dernierEnvoi >= DELAI_MIN_NOTIF_MS) {
       await redis(['SET', CLE_DERNIER_ENVOI, String(maintenant)])
-      notification = 'a_envoyer'
-      // TODO étape notifications : web-push vers les abonnements « machine »
+      notification = await envoyer(await abonnesA('machine'), {
+        title: 'La machine remarche',
+        body: 'La machine à café de l’école fonctionne de nouveau.',
+        url: '/',
+      })
     }
   }
 
