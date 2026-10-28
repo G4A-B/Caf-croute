@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import baguetteNuit from '../assets/illus/baguette-nuit.svg'
 import biereBeige from '../assets/illus/biere-beige.svg'
 import biereNoire from '../assets/illus/biere-noire.svg'
-import biereRose from '../assets/illus/biere-rose.svg'
 import trinqueClair from '../assets/illus/trinque-clair.svg'
-import baguette from '../assets/illus/baguette.svg'
-import sandwichNuit from '../assets/illus/sandwich-nuit.svg'
-import sandwich from '../assets/illus/sandwich.svg'
+import sandwichNuit from '../assets/illus/sandwich-yeux-nuit.svg'
+import sandwich from '../assets/illus/sandwich-yeux.svg'
 import tasseBruneNuit from '../assets/illus/tasse-brune-nuit.svg'
 import tasseBrune from '../assets/illus/tasse-brune.svg'
 import tasseRoseNuit from '../assets/illus/tasse-rose-nuit.svg'
@@ -18,7 +15,6 @@ import { CafCrout } from '../features/splash/cafcrout-splash.js'
 // Version nuit : brun et crème échangés (fichiers *-nuit.svg), le rose ne change pas.
 type Paire = { jour: string; nuit: string }
 export const ILLUSTRATIONS = {
-  baguette: { jour: baguette, nuit: baguetteNuit },
   sandwich: { jour: sandwich, nuit: sandwichNuit },
   tasseBrune: { jour: tasseBrune, nuit: tasseBruneNuit },
   tasseRose: { jour: tasseRose, nuit: tasseRoseNuit },
@@ -26,8 +22,8 @@ export const ILLUSTRATIONS = {
   biere: { jour: biereNoire, nuit: biereBeige },
 } satisfies Record<string, Paire>
 
-// Bière rose (carte Bières de l'accueil, fond brun) et « trinque ! » en version claire (tiroir crème)
-export const ILLUSTRATIONS_FIXES = { biereRose, trinqueClair }
+// « Trinque ! » en version claire (tiroir crème)
+export const ILLUSTRATIONS_FIXES = { trinqueClair }
 
 // Les deux versions sont dans la page, le CSS montre celle du mode courant (pas de saut au retournement)
 export function Illustration({ paire, className, delai = 0 }: { paire: Paire; className: string; delai?: number }) {
@@ -90,7 +86,7 @@ export function Splash({ fini }: { fini: () => void }) {
 const CHARGEMENTS: Record<Mode, { illus: Paire[]; texte: string }> = {
   cafe: { illus: [ILLUSTRATIONS.tasseBrune], texte: 'On cherche ton café…' },
   manger: { illus: [ILLUSTRATIONS.sandwich], texte: 'On cherche de quoi manger…' },
-  les_deux: { illus: [ILLUSTRATIONS.tasseBrune, ILLUSTRATIONS.baguette], texte: 'On assemble ta pause…' },
+  les_deux: { illus: [ILLUSTRATIONS.tasseBrune, ILLUSTRATIONS.sandwich], texte: 'On assemble ta pause…' },
   biere: { illus: [ILLUSTRATIONS.biere], texte: 'On cherche ta bière…' },
 }
 

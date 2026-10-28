@@ -127,7 +127,7 @@ function CartePlan({ proposition, numero, total, partir, voirPlus }: PropsCarte)
 const ILLUSTRATION_TIROIR: Record<Exclude<Mode, 'biere'>, keyof typeof ILLUSTRATIONS> = {
   cafe: 'tasseRose',
   manger: 'sandwich',
-  les_deux: 'baguette',
+  les_deux: 'sandwich',
 }
 
 function ContenuDepart({ mode, proposition }: { mode: Mode; proposition: Proposition }) {

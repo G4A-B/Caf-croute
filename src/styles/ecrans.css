@@ -889,11 +889,6 @@
   object-fit: contain;
 }
 
-.carte-choix__illu {
-  height: 88px;
-  width: auto;
-}
-
 .tiroir__tete {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
