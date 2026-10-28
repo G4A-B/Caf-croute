@@ -1,16 +1,19 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { EtatMachine, EtatMachineActuel } from '../../data/types.ts'
 import { IconeCloche } from '../../components/Icones.tsx'
+import { DUREE_TIROIR_MS, Tiroir } from '../../components/Tiroir.tsx'
 import { notificationsActivees, notificationsPossibles, sAbonner } from '../notifications/abonnement.ts'
+import { IlluMachine, type Expression } from './IlluMachine.tsx'
+import { JeuMachine } from './JeuMachine.tsx'
 import { lireEtatMachine, signalerMachine, VERROU_MS, type EtatPartage } from './machine.ts'
 
 // L'état est relu régulièrement : un signalement fait sur un téléphone apparaît sur les autres
 const RAFRAICHISSEMENT_MS = 20_000
 
-const TEXTES: Record<EtatMachineActuel['etat'], { titre: string; classe: string }> = {
-  marche: { titre: 'Elle marche', classe: 'carte-machine--marche' },
-  en_panne: { titre: 'En panne', classe: 'carte-machine--panne' },
-  inconnu: { titre: 'État inconnu', classe: 'carte-machine--inconnu' },
+const TEXTES: Record<EtatMachineActuel['etat'], { titre: string; classe: string; expression: Expression }> = {
+  marche: { titre: 'Elle marche', classe: 'carte-machine--marche', expression: 'contente' },
+  en_panne: { titre: 'En panne', classe: 'carte-machine--panne', expression: 'panne' },
+  inconnu: { titre: 'État inconnu', classe: 'carte-machine--inconnu', expression: 'dort' },
 }
 
 function heure(date: string | number): string {
@@ -26,6 +29,8 @@ export default function CarteMachine() {
   const [message, setMessage] = useState<string | null>(null)
   const [enCours, setEnCours] = useState(false)
   const [maintenant, setMaintenant] = useState(() => Date.now())
+  const [jeu, setJeu] = useState(false)
+  const [fermeture, setFermeture] = useState(false)
 
   const charger = useCallback(() => lireEtatMachine().then(setPartage), [])
 
@@ -80,6 +85,15 @@ export default function CarteMachine() {
     setEnCours(false)
   }
 
+  // Joue l'animation de sortie avant de retirer le tiroir du mini-jeu
+  const fermerJeu = useCallback(() => {
+    setFermeture(true)
+    setTimeout(() => {
+      setJeu(false)
+      setFermeture(false)
+    }, DUREE_TIROIR_MS)
+  }, [])
+
   async function prevenir() {
     const resultat = await sAbonner(['machine'], null)
     setMessage(
@@ -98,6 +112,9 @@ export default function CarteMachine() {
 
   return (
     <section className={`carte-machine ${texte.classe}`} aria-labelledby="titre-machine">
+      <button type="button" className="carte-machine__illu" onClick={() => setJeu(true)} aria-label="Ouvrir la machine : voir son état et lui taper dessus">
+        <IlluMachine expression={etat ? texte.expression : 'dort'} taille={52} />
+      </button>
       <div className="carte-machine__tete">
         <p className="surtitre" id="titre-machine">
           Machine à café de l’école
@@ -153,6 +170,18 @@ export default function CarteMachine() {
         <p className="carte-machine__message" role="status">
           {message}
         </p>
+      )}
+
+      {jeu && (
+        <Tiroir titreId="titre-jeu-machine" fermeture={fermeture} fermer={fermerJeu} libelleFermer="Fermer, revenir à l’accueil">
+          <JeuMachine
+            etat={etat?.etat ?? 'inconnu'}
+            verrouille={verrouille}
+            finVerrou={verrouJusqua ? heure(verrouJusqua) : null}
+            enCours={enCours}
+            signaler={(nouvel) => void signaler(nouvel)}
+          />
+        </Tiroir>
       )}
     </section>
   )

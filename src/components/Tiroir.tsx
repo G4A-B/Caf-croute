@@ -8,12 +8,13 @@ type Props = {
   titreId: string
   fermeture: boolean
   fermer: () => void
+  libelleFermer?: string
   children: ReactNode
 }
 
 // Tiroir qui monte du bas, le contenu reste visible derrière un voile.
 // Se ferme avec la croix, un tap sur le voile ou la touche Échap.
-export function Tiroir({ titreId, fermeture, fermer, children }: Props) {
+export function Tiroir({ titreId, fermeture, fermer, libelleFermer = 'Fermer, revenir aux idées', children }: Props) {
   const tiroir = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export function Tiroir({ titreId, fermeture, fermer, children }: Props) {
         {/* En-tête : poignée au centre, croix à droite (défile avec le contenu) */}
         <div className="tiroir__tete">
           <span className="tiroir__poignee" aria-hidden="true" />
-          <button type="button" className="bouton-fermer" onClick={fermer} aria-label="Fermer, revenir aux idées">
+          <button type="button" className="bouton-fermer" onClick={fermer} aria-label={libelleFermer}>
             <IconeCroix />
           </button>
         </div>

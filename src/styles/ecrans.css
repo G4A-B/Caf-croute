@@ -142,7 +142,7 @@
   display: grid;
   gap: var(--espace-3);
   padding: var(--espace-4);
-  border: 2px solid var(--couleur-bordure);
+  border: 2px solid transparent;
   border-radius: var(--rayon-grand);
   background: var(--couleur-surface);
 }
@@ -1019,4 +1019,131 @@
 
 .tiroir__action > * {
   width: 100%;
+}
+
+/* Machine à café : illu sur la carte, mini-jeu dans le tiroir */
+.carte-machine {
+  grid-template-columns: auto 1fr;
+  column-gap: var(--espace-3);
+}
+
+.carte-machine > :not(.carte-machine__illu, .carte-machine__tete, .carte-machine__cloche) {
+  grid-column: 1 / -1;
+}
+
+.carte-machine__tete {
+  padding-right: 44px;
+}
+
+.carte-machine__illu {
+  display: grid;
+  place-items: center;
+  min-width: 64px;
+  min-height: 72px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.carte-machine__illu:active svg {
+  transform: scale(0.94) rotate(-4deg);
+}
+
+.jeu-machine {
+  display: grid;
+  justify-items: center;
+  gap: var(--espace-3);
+  padding-bottom: var(--espace-4);
+  text-align: center;
+}
+
+.jeu-machine .carte-machine__actions {
+  width: 100%;
+}
+
+.jeu-machine__machine {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 240px;
+  padding: var(--espace-5) 0 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.jeu-machine__secousse {
+  display: block;
+  animation: secousse 0.32s ease-out;
+  transform-origin: 50% 100%;
+}
+
+.jeu-machine__bruit {
+  position: absolute;
+  top: var(--espace-4);
+  padding: var(--espace-1) var(--espace-3);
+  border-radius: var(--rayon-moyen);
+  background: var(--rose);
+  color: var(--brun);
+  font-weight: var(--graisse-titre);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: bruit 0.7s ease-out forwards;
+}
+
+.jeu-machine__compteur {
+  font-weight: var(--graisse-forte);
+}
+
+.jeu-machine__message {
+  max-width: 32ch;
+  color: var(--couleur-texte-secondaire);
+}
+
+@keyframes secousse {
+  0% {
+    transform: translateX(0) rotate(0);
+  }
+  20% {
+    transform: translateX(-8px) rotate(-5deg) scale(0.96, 1.04);
+  }
+  45% {
+    transform: translateX(7px) rotate(4deg);
+  }
+  70% {
+    transform: translateX(-4px) rotate(-2deg);
+  }
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+}
+
+@keyframes bruit {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 8px) scale(0.6) rotate(-8deg);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -6px) scale(1.1) rotate(4deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -28px) scale(1) rotate(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jeu-machine__secousse,
+  .jeu-machine__bruit {
+    animation: none;
+  }
+
+  .jeu-machine__bruit {
+    transform: translateX(-50%);
+  }
 }
