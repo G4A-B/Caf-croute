@@ -17,7 +17,7 @@
 
 - Saisie du budget (5 € par défaut) et du temps de pause
 - Calcul d'UN plan (à manger + café) dans `src/features/plan`
-- Bouton « autre idée »
+- Cartes d'idées à faire glisser
 - Distances en minutes à pied, pas de carte ni de liste
 - Intégration des tokens et maquettes de l'équipe DA
 

@@ -11,6 +11,6 @@ Règles prévues :
 - total manger + café inférieur ou égal au budget ;
 - aller-retour à pied (2 x `minutes_a_pied`) + temps pour manger inférieur à la durée de la pause ;
 - machine de l'école proposée seulement si son état est « marche » ;
-- bouton « autre idée » : plan suivant, sans reproposer le même tout de suite.
+- une carte par lieu, à faire glisser ; « Modifier mon budget » ramène au choix du budget.
 
 Pas de liste de résultats, pas de carte. Fonctions pures, testables sans interface.

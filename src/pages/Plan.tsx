@@ -189,11 +189,9 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
         <button type="button" className="bouton-principal" onClick={() => setParti(true)}>
           C’est parti
         </button>
-        {liste.length > 1 && (
-          <button type="button" className="bouton-secondaire" onClick={() => allerA((index + 1) % liste.length)}>
-            Autre idée
-          </button>
-        )}
+        <button type="button" className="bouton-secondaire" onClick={retour}>
+          Modifier mon budget
+        </button>
       </div>
     </main>
   )

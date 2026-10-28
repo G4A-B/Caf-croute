@@ -4,7 +4,7 @@ App pour la pause déj et café des étudiant·es autour de l'école, avec un pe
 
 > Quand la pause commence et que j'ai 5 € en poche, je veux qu'on me dise quoi manger et où prendre un café, pour ne pas passer ma pause à comparer.
 
-L'app répond par **un seul plan** (à manger + café) selon le budget et le temps de pause, avec un bouton « autre idée ». Pas de carte, pas de liste à filtrer. Les distances sont en minutes à pied depuis l'entrée de l'école.
+L'app propose des **cartes d'idées à faire glisser** (une par lieu, la plus proche d'abord) selon le budget. Pas de plan de quartier, pas de liste à filtrer. Les distances sont en minutes à pied depuis l'entrée de l'école.
 
 Projet de l'atelier « une app en une journée », octobre 2026.
 
