@@ -144,7 +144,7 @@
   padding: var(--espace-4);
   border: 2px solid transparent;
   border-radius: var(--rayon-grand);
-  background: var(--couleur-surface);
+  background: #ffffff;
 }
 
 .carte-machine--marche {
