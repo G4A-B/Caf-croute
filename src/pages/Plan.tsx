@@ -98,7 +98,14 @@ function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
 // Se ferme avec la croix, un tap sur le voile ou la touche Échap.
 const DUREE_TIROIR_MS = 260
 
-function TiroirDepart({ proposition, fermer }: { proposition: Proposition; fermer: () => void }) {
+// Illustration du tiroir selon le parcours (bière : pictogramme provisoire en attendant l'icône DA)
+const ILLUSTRATION_TIROIR: Record<Exclude<Mode, 'biere'>, keyof typeof ILLUSTRATIONS> = {
+  cafe: 'tasseRose',
+  manger: 'sandwich',
+  les_deux: 'baguette',
+}
+
+function TiroirDepart({ mode, proposition, fermer }: { mode: Mode; proposition: Proposition; fermer: () => void }) {
   const tiroir = useRef<HTMLDivElement>(null)
   const lieux = [proposition.manger, proposition.cafe, proposition.biere]
     .filter((c): c is Choix => !!c)
@@ -126,7 +133,13 @@ function TiroirDepart({ proposition, fermer }: { proposition: Proposition; ferme
       </button>
       <span className="tiroir__poignee" aria-hidden="true" />
       <div className="tiroir__illu">
-        <Illustration paire={ILLUSTRATIONS.baguette} className="plan__illu anim-marche" />
+        {mode === 'biere' ? (
+          <span className="tiroir__picto anim-marche">
+            <IconeBiere taille={110} />
+          </span>
+        ) : (
+          <Illustration paire={ILLUSTRATIONS[ILLUSTRATION_TIROIR[mode]]} className="plan__illu anim-marche" />
+        )}
       </div>
       <h2 className="tiroir__titre" id="titre-depart">
         Vite, t’as {proposition.minutes_a_pied} min pour y aller
@@ -262,7 +275,7 @@ export default function Plan({ mode, budget, retour }: Props) {
       {parti && (
         <div className={`tiroir-scene${fermeture ? ' tiroir-scene--fermeture' : ''}`}>
           <div className="tiroir-voile" onClick={fermerTiroir} aria-hidden="true" />
-          <TiroirDepart proposition={proposition} fermer={fermerTiroir} />
+          <TiroirDepart mode={mode} proposition={proposition} fermer={fermerTiroir} />
         </div>
       )}
     </main>

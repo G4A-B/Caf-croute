@@ -779,7 +779,13 @@
 
 .tiroir .plan__illu {
   width: 170px;
-  height: auto;
+  height: 120px;
+  object-fit: contain;
+}
+
+.tiroir__picto {
+  display: inline-grid;
+  color: var(--couleur-texte);
 }
 
 .bouton-fermer {
