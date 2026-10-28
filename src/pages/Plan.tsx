@@ -125,8 +125,9 @@ function TiroirDepart({ proposition, fermer }: { proposition: Proposition; ferme
         <IconeCroix />
       </button>
       <span className="tiroir__poignee" aria-hidden="true" />
-      <Illustration paire={ILLUSTRATIONS.baguette} className="plan__illu anim-marche" />
-      <p className="surtitre">C’est parti</p>
+      <div className="tiroir__illu">
+        <Illustration paire={ILLUSTRATIONS.baguette} className="plan__illu anim-marche" />
+      </div>
       <h2 className="tiroir__titre" id="titre-depart">
         Vite, t’as {proposition.minutes_a_pied} min pour y aller
       </h2>
@@ -220,7 +221,6 @@ export default function Plan({ mode, budget, retour }: Props) {
           Idée {index + 1} sur {liste.length} · budget {formaterPrix(budget)}
         </p>
         <h1 className="grand-titre">Tes idées</h1>
-        {liste.length > 1 && <p className="plan__astuce">Fais glisser les cartes pour comparer.</p>}
       </div>
 
       <div className="pile" ref={pile} onScroll={suivreGlissement} aria-label="Idées de pause">

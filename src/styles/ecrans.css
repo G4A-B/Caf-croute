@@ -396,11 +396,6 @@
 }
 
 /* Pile de cartes à faire glisser */
-.plan__astuce {
-  margin-top: var(--espace-2);
-  font-size: var(--taille-petite);
-  color: var(--couleur-texte-secondaire);
-}
 
 .pile {
   display: flex;
@@ -651,10 +646,6 @@
     font-size: var(--taille-titre);
   }
 
-  .plan--idees .plan__astuce {
-    display: none;
-  }
-
   .pile .carte-plan {
     padding: var(--espace-4);
     gap: var(--espace-2);
@@ -743,7 +734,7 @@
 .tiroir {
   position: relative;
   display: grid;
-  gap: var(--espace-3);
+  gap: var(--espace-5);
   width: 100%;
   max-width: 30rem;
   max-height: 85dvh;
@@ -780,9 +771,14 @@
   font-size: var(--taille-titre);
 }
 
+.tiroir__illu {
+  display: grid;
+  justify-items: center;
+  padding-block: var(--espace-6) var(--espace-4);
+}
+
 .tiroir .plan__illu {
-  justify-self: center;
-  width: 140px;
+  width: 170px;
   height: auto;
 }
 
@@ -847,4 +843,25 @@
 
 :root[data-moment='nuit'] .illu-nuit {
   display: block;
+}
+
+/* Mode nuit : le tiroir reste clair, posé sur la page foncée */
+:root[data-moment='nuit'] .tiroir {
+  --couleur-fond: var(--creme);
+  --couleur-surface: #fffdf2;
+  --couleur-texte: var(--brun);
+  --couleur-texte-secondaire: #5c4540;
+  --couleur-bordure: rgb(68 45 41 / 0.18);
+  --couleur-accent: var(--brun);
+  --couleur-accent-texte: var(--creme);
+  --couleur-focus: var(--brun);
+  color: var(--couleur-texte);
+}
+
+:root[data-moment='nuit'] .tiroir .illu-jour {
+  display: block;
+}
+
+:root[data-moment='nuit'] .tiroir .illu-nuit {
+  display: none;
 }
