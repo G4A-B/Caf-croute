@@ -1,0 +1,30 @@
+# CLAUDE.md
+
+Projet « La Pause » (dépôt Caf'croute) : atelier « une app en une journée », octobre 2026. Démonstration pédagogique en direct : avancer étape par étape, commits courts et lisibles, messages en français (`feat:`, `fix:`, `docs:`, `chore:`). Le design (DA, parcours, contenu) avance en parallèle.
+
+## Principes du produit
+
+- L'app répond par UN plan (à manger + café) selon le budget et le temps de pause, avec un bouton « autre idée ». Pas de carte, pas de liste de résultats à filtrer. Les distances s'expriment en minutes à pied depuis l'entrée de l'école.
+- Pas de compte et pas de saisie dans l'app. Les données (lieux, relevés de prix, état de la machine de l'école) vivent dans des fichiers JSON du dépôt (`src/data/`). Les équipes contenu les relèvent sur le terrain et les ajoutent par commit ou pull request. Chaque push sur `main` les publie.
+- Chaque relevé est daté : on ajoute, on n'écrase jamais, et l'app utilise le plus récent. Un état de la machine vieux de plus de 2 h s'affiche « inconnu ».
+- Notifications push prévues : (1) la machine remarche, (2) un nouveau bon plan sous un prix choisi par l'abonné·e. L'envoi se déclenche à la publication d'un déploiement de production qui contient ces nouveautés.
+
+## Contraintes techniques
+
+- Vite + React + TypeScript, CSS natif avec les variables de `src/styles/tokens.css` (provisoires, l'équipe DA les remplacera). Pas de framework CSS.
+- Pas de base de données. Seul stockage serveur prévu : Upstash Redis, uniquement pour les abonnements push et l'état des envois.
+- Pas de carte, pas de géolocalisation, pas de bibliothèque de cartographie.
+- Pas d'authentification, pas de routeur. Aucune dépendance nouvelle sans raison claire (prévues : `web-push`, `@upstash/redis` à l'étape notifications).
+- PWA : vite-plugin-pwa en `injectManifest`, service worker écrit à la main dans `src/sw.ts`. La permission de notification se demande après un geste, jamais au chargement.
+- Aucun secret dans le code ni dans le dépôt. Les clés secrètes ne portent jamais le préfixe `VITE_`.
+- Jamais de tiret cadratin dans les textes de l'interface ni dans la doc.
+- Interface en français, mobile d'abord, zone tactile de 44 px minimum, marges safe-area, contraste AA.
+- Palette : aucune couleur orange, corail ou terracotta.
+
+## Repères
+
+- Données : `src/data/*.json`, types et valeurs autorisées dans `src/data/types.ts`, lecture dans `src/data/index.ts`.
+- `npm run build` lance d'abord `scripts/verifier-donnees.ts` : une donnée invalide bloque le déploiement. Garder ce script aligné avec `types.ts`.
+- Notifications : `src/features/notifications/README.md` décrit le flux complet.
+- Vercel : site statique (`dist`) + fonctions dans `api/`. Push sur `main` = production, pull request = preview.
+- Avant de pousser : `npm run build` sans erreur, `npm run preview` fonctionnel.
