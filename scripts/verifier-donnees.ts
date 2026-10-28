@@ -4,13 +4,18 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import {
+  ADRESSE_MAX,
   ARTICLE_MAX,
   CATEGORIES,
+  CONSOMMATIONS,
   ETATS_MACHINE,
   NOM_MAX,
   PRIX_MAX_CENTIMES,
   PRIX_MIN_CENTIMES,
   RELEVE_PAR_MAX,
+  REMARQUE_MAX,
+  SOURCE_MAX,
+  TYPES_CAFE,
   TYPES_LIEU,
 } from '../src/data/types.ts'
 
@@ -82,6 +87,11 @@ const identifiant = (v: unknown) =>
   typeof v === 'string' && /^[a-z0-9-]{1,40}$/.test(v) ? null : 'doit contenir seulement a-z, 0-9 et des tirets'
 const entier = (min: number, max: number) => (v: unknown) =>
   Number.isInteger(v) && (v as number) >= min && (v as number) <= max ? null : `doit être un entier entre ${min} et ${max}`
+const booleen = (v: unknown) => (typeof v === 'boolean' ? null : 'doit valoir true ou false')
+const source = (v: unknown) =>
+  typeof v === 'string' && v.length <= SOURCE_MAX && /^(photo|note|benchmark):.+|^terrain$/.test(v)
+    ? null
+    : 'doit commencer par « photo: », « note: » ou « benchmark: », ou valoir « terrain »'
 const date = (v: unknown) => {
   if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(v) || Number.isNaN(Date.parse(v)))
     return 'doit être une date comme "2026-10-28T12:15:00+01:00"'
@@ -93,12 +103,17 @@ const lieux = charger('lieux.json')
 const releves = charger('releves.json')
 const machine = charger('machine.json')
 
-const idsLieux = verifier(lieux, {
-  id: identifiant,
-  nom: texte(NOM_MAX),
-  type: parmi(TYPES_LIEU),
-  minutes_a_pied: entier(0, 60),
-})
+const idsLieux = verifier(
+  lieux,
+  {
+    id: identifiant,
+    nom: texte(NOM_MAX),
+    type: parmi(TYPES_LIEU),
+    minutes_a_pied: entier(0, 60),
+    adresse: texte(ADRESSE_MAX),
+  },
+  ['adresse'],
+)
 
 verifier(
   releves,
@@ -109,10 +124,23 @@ verifier(
     categorie: parmi(CATEGORIES),
     prix_centimes: entier(PRIX_MIN_CENTIMES, PRIX_MAX_CENTIMES),
     date,
+    source,
+    type_cafe: parmi(TYPES_CAFE),
+    consommation: parmi(CONSOMMATIONS),
+    a_verifier: booleen,
+    remarque: texte(REMARQUE_MAX),
     releve_par: texte(RELEVE_PAR_MAX),
   },
-  ['releve_par'],
+  ['type_cafe', 'consommation', 'a_verifier', 'remarque', 'releve_par'],
 )
+
+// type_cafe : obligatoire pour un café, interdit sinon
+releves.entrees.forEach((r, i) => {
+  const ou = `${releves.chemin}, ${ligne(releves, r, i)}`
+  if (r.categorie === 'cafe' && !('type_cafe' in r))
+    erreurs.push(`${ou} : type_cafe manquant (${TYPES_CAFE.join(', ')}).`)
+  if (r.categorie !== 'cafe' && 'type_cafe' in r) erreurs.push(`${ou} : type_cafe seulement pour la catégorie cafe.`)
+})
 
 verifier(machine, { id: identifiant, etat: parmi(ETATS_MACHINE), date })
 

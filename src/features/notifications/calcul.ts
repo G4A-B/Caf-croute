@@ -44,7 +44,7 @@ export function calculerEnvois({ lieux, releves, signalements, abonnements, etat
   // 2. Nouveaux bons plans sous le seuil de chaque abonné·e (premier passage : rien)
   if (etat.relevesConnus !== null) {
     const connus = new Set(etat.relevesConnus)
-    const nouveaux = releves.filter((r) => !connus.has(r.id) && r.categorie !== 'autre')
+    const nouveaux = releves.filter((r) => !connus.has(r.id) && r.categorie !== 'autre' && !r.a_verifier)
     for (const a of abonnements) {
       if (!a.sujets.includes('bons_plans') || a.seuil_centimes === null) continue
       const seuil = a.seuil_centimes

@@ -9,16 +9,19 @@ Pour chaque article :
 | Information | Exemple | Remarque |
 | --- | --- | --- |
 | Lieu | Boulangerie Martin | nom affiché dans l'app (60 caractères max) |
-| Type de lieu | boulangerie | `boulangerie`, `cafe_a_emporter`, `supermarche`, `machine_ecole`, `autre` |
+| Type de lieu | boulangerie | `boulangerie`, `coffee_shop`, `bar`, `restauration_rapide`, `supermarche`, `epicerie`, `machine_ecole`, `autre` |
+| Adresse | 13 rue Vasselot | facultatif mais utile |
 | Minutes à pied | 4 | depuis l'**entrée de l'école**, à pas normal, aller simple |
 | Article | Sandwich jambon beurre | tel qu'affiché sur place (80 caractères max) |
 | Catégorie | a_manger | `a_manger`, `cafe`, `autre` |
 | Prix | 4,50 € | à noter en centimes : 450 |
 | Date et heure | 28/10/2026 à 12 h 15 | à noter au format `2026-10-28T12:15:00+01:00` |
 
-Notez aussi le nom de votre équipe (`releve_par`).
+Pour un café, notez aussi son type (`type_cafe`) : `expresso`, `double`, `allonge`, `creme`, `au_lait`, `specialite` ou `glace`. Si le prix change entre comptoir et salle, faites deux relevés avec `consommation` : `comptoir`, `salle` ou `emporter`.
 
-Pour la machine à café de l'école : l'état (`en_panne` ou `marche`) et l'heure.
+Notez aussi d'où vient le prix (`source`) : `photo:<nom du fichier>`, `note:<auteur>`, `benchmark:<site>` ou `terrain`, et le nom de votre équipe (`releve_par`). Un prix pas sûr (lu de loin, trouvé sur le web) prend `"a_verifier": true` : l'app ne le propose pas tant qu'il n'est pas confirmé.
+
+L'état de la machine à café se signale dans l'app (carte sur l'écran d'accueil), pas dans les fichiers.
 
 ## Les fichiers
 
@@ -29,7 +32,8 @@ Pour la machine à café de l'école : l'état (`en_panne` ou `marche`) et l'heu
   "id": "boulangerie-martin",
   "nom": "Boulangerie Martin",
   "type": "boulangerie",
-  "minutes_a_pied": 4
+  "minutes_a_pied": 4,
+  "adresse": "13 rue Vasselot"
 }
 ```
 
@@ -45,6 +49,7 @@ L'`id` est court, en minuscules, avec des tirets, et ne change plus jamais.
   "categorie": "a_manger",
   "prix_centimes": 450,
   "date": "2026-10-28T12:15:00+01:00",
+  "source": "terrain",
   "releve_par": "Équipe contenu 1"
 }
 ```
@@ -53,17 +58,21 @@ L'`id` est court, en minuscules, avec des tirets, et ne change plus jamais.
 - `lieu_id` : l'`id` d'un lieu qui existe dans `lieux.json`.
 - Le prix a changé ? **N'effacez pas l'ancien relevé** : ajoutez-en un nouveau avec la nouvelle date. L'app prend toujours le plus récent.
 
-### La machine à café : `src/data/machine.json`
+### Exemple de café
 
 ```json
 {
-  "id": "m-0003",
-  "etat": "en_panne",
-  "date": "2026-10-28T12:10:00+01:00"
+  "id": "r-0080",
+  "lieu_id": "gang",
+  "article": "Flat white",
+  "categorie": "cafe",
+  "prix_centimes": 420,
+  "date": "2026-10-28T12:55:00+01:00",
+  "source": "photo:IMG_1234.jpeg",
+  "type_cafe": "au_lait",
+  "releve_par": "Équipe contenu 2"
 }
 ```
-
-Ajoutez une ligne à chaque constat. Un état de plus de 2 h s'affiche « inconnu ».
 
 ## Comment ajouter (sans rien installer)
 
@@ -83,8 +92,9 @@ Ajoutez une ligne à chaque constat. Un état de plus de 2 h s'affiche « inconn
 - `lieu_id` existant, type et catégorie parmi les valeurs autorisées ;
 - prix entier entre 20 et 2000 centimes (0,20 € à 20 €) ;
 - minutes à pied entre 0 et 60 ;
-- dates valides, pas dans le futur.
+- dates valides, pas dans le futur ;
+- source au bon format, `type_cafe` présent pour chaque café.
 
-## Données d'exemple
+## Relevés existants
 
-Tout ce qui contient « EXEMPLE » est fictif. Remplacez-le par de vrais relevés, puis supprimez les exemples (c'est le seul cas où l'on efface).
+Le bilan du 28 octobre 2026 (ce qui est intégré, écarté, à identifier) est dans `docs/releves-2026-10-28.md`.

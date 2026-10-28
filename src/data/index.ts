@@ -19,10 +19,10 @@ function plusRecentDabord<T extends { date: string }>(a: T, b: T): number {
 }
 
 function cleArticle(r: RelevePrix): string {
-  return `${r.lieu_id}::${r.article.trim().toLowerCase()}`
+  return `${r.lieu_id}::${r.article.trim().toLowerCase()}::${r.consommation ?? ''}`
 }
 
-// Dernier relevé pour chaque couple (lieu, article)
+// Dernier relevé pour chaque (lieu, article, comptoir/salle/emporter)
 export function prixActuels(liste: RelevePrix[] = releves): RelevePrix[] {
   const parArticle = new Map<string, RelevePrix>()
   for (const r of [...liste].sort(plusRecentDabord)) {
@@ -30,6 +30,11 @@ export function prixActuels(liste: RelevePrix[] = releves): RelevePrix[] {
     if (!parArticle.has(cle)) parArticle.set(cle, r)
   }
   return [...parArticle.values()]
+}
+
+// Prix actuels que l'app peut proposer : sans ceux marqués « à vérifier »
+export function prixFiables(liste: RelevePrix[] = releves): RelevePrix[] {
+  return prixActuels(liste).filter((r) => !r.a_verifier)
 }
 
 // Dernier signalement, « inconnu » s'il a plus de 2 h

@@ -1,26 +1,128 @@
 [
   {
     "id": "machine-ecole",
-    "nom": "Machine à café de l'école (EXEMPLE)",
+    "nom": "Machine à café de l'école",
     "type": "machine_ecole",
-    "minutes_a_pied": 0
+    "minutes_a_pied": 0,
+    "adresse": "13 rue Poullain Duparc"
   },
   {
-    "id": "boulangerie-exemple",
-    "nom": "Boulangerie du coin (EXEMPLE)",
-    "type": "boulangerie",
-    "minutes_a_pied": 4
+    "id": "les-petites-pestes",
+    "nom": "Les Petites Pestes",
+    "type": "coffee_shop",
+    "minutes_a_pied": 2,
+    "adresse": "32 rue Poullain Duparc"
   },
   {
-    "id": "cafe-exemple",
-    "nom": "Café à emporter (EXEMPLE)",
-    "type": "cafe_a_emporter",
-    "minutes_a_pied": 3
-  },
-  {
-    "id": "supermarche-exemple",
-    "nom": "Supérette (EXEMPLE)",
+    "id": "u-express-duparc",
+    "nom": "U Express",
     "type": "supermarche",
-    "minutes_a_pied": 7
+    "minutes_a_pied": 2,
+    "adresse": "27-31 rue Poullain Duparc"
+  },
+  {
+    "id": "gang",
+    "nom": "Gang",
+    "type": "coffee_shop",
+    "minutes_a_pied": 2,
+    "adresse": "8 rue de la Parcheminerie"
+  },
+  {
+    "id": "halles-cote-et-vin",
+    "nom": "Côté & Vin (Halles centrales)",
+    "type": "bar",
+    "minutes_a_pied": 2,
+    "adresse": "Halles centrales, place Honoré Commeurec"
+  },
+  {
+    "id": "halles-galettes",
+    "nom": "Stand galettes (Halles centrales)",
+    "type": "restauration_rapide",
+    "minutes_a_pied": 2,
+    "adresse": "Halles centrales, place Honoré Commeurec"
+  },
+  {
+    "id": "why-not",
+    "nom": "Why Not",
+    "type": "coffee_shop",
+    "minutes_a_pied": 3,
+    "adresse": "10 rue Vasselot"
+  },
+  {
+    "id": "cafe-joyeux",
+    "nom": "Café Joyeux",
+    "type": "coffee_shop",
+    "minutes_a_pied": 3,
+    "adresse": "14 rue Vasselot"
+  },
+  {
+    "id": "la-tour-de-pise",
+    "nom": "La Tour de Pise",
+    "type": "epicerie",
+    "minutes_a_pied": 3,
+    "adresse": "1 rue Vasselot"
+  },
+  {
+    "id": "wagga-wagga",
+    "nom": "WaggaWagga",
+    "type": "restauration_rapide",
+    "minutes_a_pied": 3,
+    "adresse": "3 rue Vasselot"
+  },
+  {
+    "id": "safir",
+    "nom": "Safir",
+    "type": "epicerie",
+    "minutes_a_pied": 4,
+    "adresse": "22 rue Vasselot"
+  },
+  {
+    "id": "saint-charles",
+    "nom": "Le Saint-Charles",
+    "type": "bar",
+    "minutes_a_pied": 4,
+    "adresse": "24 rue Vasselot"
+  },
+  {
+    "id": "la-boutique-iberique",
+    "nom": "La Boutique Ibérique",
+    "type": "epicerie",
+    "minutes_a_pied": 4,
+    "adresse": "15 rue Vasselot"
+  },
+  {
+    "id": "roadside",
+    "nom": "Roadside",
+    "type": "restauration_rapide",
+    "minutes_a_pied": 5,
+    "adresse": "13 rue du Maréchal Joffre"
+  },
+  {
+    "id": "brioche-doree-orleans",
+    "nom": "Brioche Dorée",
+    "type": "restauration_rapide",
+    "minutes_a_pied": 5,
+    "adresse": "2 rue d'Orléans"
+  },
+  {
+    "id": "bakery-kafe",
+    "nom": "Bakery Kafé",
+    "type": "boulangerie",
+    "minutes_a_pied": 10,
+    "adresse": "42 rue Saint-Georges"
+  },
+  {
+    "id": "fournil-de-pierre",
+    "nom": "Fournil de Pierre",
+    "type": "boulangerie",
+    "minutes_a_pied": 11,
+    "adresse": "23 rue Saint-Michel"
+  },
+  {
+    "id": "novettino",
+    "nom": "Novettino",
+    "type": "restauration_rapide",
+    "minutes_a_pied": 12,
+    "adresse": "3 rue de la Visitation"
   }
 ]
