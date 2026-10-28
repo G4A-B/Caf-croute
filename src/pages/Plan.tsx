@@ -6,9 +6,8 @@ import {
   IconeMarche,
   IconeRepere,
   IconeRetour,
-  IconeSandwich,
-  IconeTasse,
 } from '../components/Icones.tsx'
+import { PictoSandwich, PictoTasse } from '../components/Pictos.tsx'
 import { lienGoogleMaps } from '../lib/itineraire.ts'
 import { formaterMinutes, formaterPrix } from '../lib/format.ts'
 import { propositions, type Choix, type Mode, type Proposition } from '../features/plan/plan.ts'
@@ -59,9 +58,9 @@ function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
       </h2>
       <ul className="plan__lignes">
         {proposition.manger && (
-          <Ligne choix={proposition.manger} icone={<IconeSandwich taille={28} />} avecLieu={deuxLieux} />
+          <Ligne choix={proposition.manger} icone={<PictoSandwich hauteur={20} />} avecLieu={deuxLieux} />
         )}
-        {proposition.cafe && <Ligne choix={proposition.cafe} icone={<IconeTasse taille={28} />} avecLieu={deuxLieux} />}
+        {proposition.cafe && <Ligne choix={proposition.cafe} icone={<PictoTasse hauteur={24} />} avecLieu={deuxLieux} />}
         {proposition.biere && <Ligne choix={proposition.biere} icone={<IconeBiere taille={28} />} avecLieu={false} />}
       </ul>
 

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import logo from '../assets/logo.svg'
 import { ILLUSTRATIONS_FIXES } from '../components/Illustrations.tsx'
-import { IconeFleche, IconeLune, IconeSandwich, IconeSoleil, IconeTasse } from '../components/Icones.tsx'
+import { IconeFleche, IconeLune, IconeSoleil } from '../components/Icones.tsx'
+import { PictoSandwich, PictoTasse } from '../components/Pictos.tsx'
 import CarteMachine from '../features/machine/CarteMachine.tsx'
 import { DEBUT_NUIT, FIN_NUIT, type Moment } from '../features/moment/moment.ts'
 import { MINUTES_MAX, nombreDeLieux, type Mode } from '../features/plan/plan.ts'
@@ -76,7 +77,7 @@ export default function Accueil({ moment, basculer, choisir }: Props) {
         <div className="choix">
           <button type="button" className="carte-choix carte-choix--cafe" onClick={() => choisir('cafe')}>
             <span className="carte-choix__haut">
-              <IconeTasse />
+              <PictoTasse hauteur={40} />
               <span className="rond-fleche">
                 <IconeFleche />
               </span>
@@ -89,7 +90,7 @@ export default function Accueil({ moment, basculer, choisir }: Props) {
 
           <button type="button" className="carte-choix carte-choix--manger" onClick={() => choisir('manger')}>
             <span className="carte-choix__haut">
-              <IconeSandwich />
+              <PictoSandwich hauteur={30} />
               <span className="rond-fleche">
                 <IconeFleche />
               </span>
@@ -107,8 +108,8 @@ export default function Accueil({ moment, basculer, choisir }: Props) {
               Café + à manger · {pluriel(nombreDeLieux('les_deux'), 'idée')}
             </span>
             <span className="carte-choix__icones">
-              <IconeSandwich taille={36} />
-              <IconeTasse taille={36} />
+              <PictoSandwich hauteur={18} clair />
+              <PictoTasse hauteur={24} clair />
               <span className="rond-fleche rond-fleche--clair">
                 <IconeFleche />
               </span>

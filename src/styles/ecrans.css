@@ -72,7 +72,7 @@
   border: 0;
   background: var(--couleur-accent);
   color: var(--couleur-accent-texte);
-  padding-right: 9.5rem;
+  padding-right: 8.5rem;
 }
 
 .carte-choix__haut {
@@ -882,4 +882,30 @@
   font-size: var(--taille-petite);
   color: var(--couleur-texte-secondaire);
   text-align: center;
+}
+
+/* Pictos DA : largeur libre, hauteur fixée */
+.picto {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  flex: none;
+}
+
+/* Sur les cartes de l'accueil, le picto laisse toujours la place à la flèche */
+.carte-choix__haut {
+  gap: var(--espace-2);
+}
+
+.carte-choix__haut .picto {
+  min-width: 0;
+  max-width: calc(100% - 48px);
+  object-fit: contain;
+  object-position: left center;
+}
+
+.plan__icone {
+  display: grid;
+  place-items: center;
+  min-width: 40px;
 }
