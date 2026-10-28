@@ -1,6 +1,6 @@
 /*
  * Animation du splash Caf'croûte, fournie par l'équipe DA (cafcrout-splash-code.html).
- * Logo en tracés SVG, sans cœur, phrases ni points (on garde l'illustration seule) ; tasse brune et baguette validées par la DA, recalées sur la chorégraphie d'origine. Durée totale 7,6 s, composition 420 x 780.
+ * Logo en tracés SVG, sans cœur, étoiles, phrases ni points (on garde l'illustration seule) ; tasse brune et baguette validées par la DA, recalées sur la chorégraphie d'origine. Durée totale 7,6 s, composition 420 x 780.
  * frame(t) renvoie le SVG de l'image à l'instant t (en secondes).
  */
 export const CafCrout = (() => {
@@ -39,7 +39,6 @@ export const CafCrout = (() => {
     const xx=x+dx*p, yy=y+dy*4*p*(1-p)+45*p*p;
     return `<ellipse cx="${n(xx)}" cy="${n(yy)}" rx="${n(size*(1-.5*p))}" ry="${n(size*1.5*(1-.5*p))}" fill="#442d29" opacity="${n(1-span(p,.66,1))}" transform="rotate(${n(dx*p)} ${n(xx)} ${n(yy)})"/>`;
   }
-  function star(x,y,s,r,color,opacity=1){return `<path d="M0 -10 Q2 -2 10 0 Q2 2 0 10 Q-2 2 -10 0 Q-2 -2 0 -10Z" transform="translate(${x} ${y}) rotate(${r}) scale(${s})" fill="${color}" opacity="${opacity}"/>`;}
   function frame(seconds) {
     const t=Math.max(0,Math.min(DURATION,seconds));
     const visible=span(t,1.83,2.30)*(1-span(t,6.62,7.42));
@@ -68,7 +67,6 @@ export const CafCrout = (() => {
     const eyeFill=blink>.1?'<path d="M410 438H850V534H410Z" fill="#f4b6c5"/>':'';
     const rippleP=clamp((t-3.92)/.65),ripple2=clamp((t-4.32)/.7);
     const ripple=(p)=>`<ellipse cx="635" cy="295" rx="${n(60+195*p)}" ry="${n(8+27*p)}" fill="none" stroke="#fffae5" stroke-width="4" opacity="${n(p>0&&p<1?(1-p)*.65:0)}" transform="rotate(8.6 633 294)"/>`;
-    const sparkleOpacity=span(t,4.85,5.25)*(1-span(t,6.2,6.55));
     let drops='';
     drops+=droplet(t,3.94,249,417,61,-75,3.5);
     drops+=droplet(t,3.98,246,416,-94,-44,3);
@@ -99,10 +97,6 @@ export const CafCrout = (() => {
         
       </g>
       ${drops}
-      <g opacity="${n(sparkleOpacity)}">
-        ${star(318,315,n(.75+.1*Math.sin(t*5)),n(t*9),'#f4b6c5')}
-        ${star(100,362,n(.5+.1*Math.sin(t*5+2)),n(-t*12),'#442d29',.7)}
-      </g>
       <g transform="translate(${n(logoX)} ${n(logoY)}) rotate(${n(logoRot)}) scale(${n(logoScale)}) translate(-250 -188.955)">${A.logo}</g>
     </svg>`;
   }
