@@ -1,0 +1,59 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
+  font-family: var(--police-texte);
+  font-size: var(--taille-texte);
+  line-height: var(--interligne);
+}
+
+h1,
+h2,
+h3 {
+  line-height: var(--interligne-titre);
+  text-wrap: balance;
+}
+
+button {
+  min-height: var(--taille-tactile-min);
+  min-width: var(--taille-tactile-min);
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--couleur-focus);
+  outline-offset: 2px;
+}
+
+.page {
+  min-height: 100dvh;
+  padding: var(--marge-haut) var(--marge-droite) var(--marge-bas) var(--marge-gauche);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--espace-2);
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.page h1 {
+  margin: 0;
+  font-size: var(--taille-grand-titre);
+}
+
+.sous-titre {
+  margin: 0;
+  color: var(--couleur-texte-secondaire);
+}
