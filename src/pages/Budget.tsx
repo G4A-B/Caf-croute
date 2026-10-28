@@ -15,6 +15,8 @@ export default function Budget({ mode, retour, valider }: Props) {
   const { min, max, suggestions } = BUDGETS[mode]
   const [centimes, setCentimes] = useState(suggestions[1].centimes)
   const idRegle = useId()
+  // La suggestion reste choisie de son prix jusqu'au prix de la suivante (exclu)
+  const active = suggestions.findLast((s) => s.centimes <= centimes)
 
   return (
     <main className="ecran budget">
@@ -30,7 +32,7 @@ export default function Budget({ mode, retour, valider }: Props) {
             key={s.centimes}
             type="button"
             role="radio"
-            aria-checked={centimes === s.centimes}
+            aria-checked={active === s}
             className="suggestion"
             onClick={() => setCentimes(s.centimes)}
           >
