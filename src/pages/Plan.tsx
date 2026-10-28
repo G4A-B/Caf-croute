@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Chargement, Illustration, ILLUSTRATIONS } from '../components/Illustrations.tsx'
 import {
   IconeBiere,
@@ -94,12 +94,67 @@ function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
   )
 }
 
-type Props = { mode: Mode; budget: number; retour: () => void; accueil: () => void }
+// Tiroir « C'est parti » : monte du bas, les idées restent visibles derrière.
+// Se ferme avec la croix, un tap sur le voile ou la touche Échap.
+const DUREE_TIROIR_MS = 260
 
-export default function Plan({ mode, budget, retour, accueil }: Props) {
+function TiroirDepart({ proposition, fermer }: { proposition: Proposition; fermer: () => void }) {
+  const tiroir = useRef<HTMLDivElement>(null)
+  const lieux = [proposition.manger, proposition.cafe, proposition.biere]
+    .filter((c): c is Choix => !!c)
+    .map((c) => c.lieu)
+    .filter((l, i, liste) => liste.findIndex((x) => x.id === l.id) === i)
+
+  useEffect(() => {
+    tiroir.current?.focus()
+    const echap = (e: KeyboardEvent) => e.key === 'Escape' && fermer()
+    document.addEventListener('keydown', echap)
+    return () => document.removeEventListener('keydown', echap)
+  }, [fermer])
+
+  return (
+    <div
+      ref={tiroir}
+      className="tiroir"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titre-depart"
+      tabIndex={-1}
+    >
+      <button type="button" className="bouton-fermer" onClick={fermer} aria-label="Fermer, revenir aux idées">
+        <IconeCroix />
+      </button>
+      <span className="tiroir__poignee" aria-hidden="true" />
+      <Illustration paire={ILLUSTRATIONS.baguette} className="plan__illu anim-marche" />
+      <p className="surtitre">C’est parti</p>
+      <h2 className="tiroir__titre" id="titre-depart">
+        Vite, t’as {proposition.minutes_a_pied} min pour y aller
+      </h2>
+      <div className="plan__adresses">
+        {lieux.map((l) => (
+          <p key={l.id} className="plan__adresse">
+            <IconeMarche />
+            <span>
+              <strong>{l.nom}</strong>, {l.adresse}
+            </span>
+          </p>
+        ))}
+      </div>
+      <p className="plan__total-final">Total : {formaterPrix(proposition.total_centimes)}</p>
+      <a className="bouton-principal bouton-lien" href={lienGoogleMaps(lieux)} target="_blank" rel="noopener noreferrer">
+        <IconeRepere /> Ouvrir dans Google Maps
+      </a>
+    </div>
+  )
+}
+
+type Props = { mode: Mode; budget: number; retour: () => void }
+
+export default function Plan({ mode, budget, retour }: Props) {
   const liste = useMemo(() => propositions(mode, budget), [mode, budget])
   const [index, setIndex] = useState(0)
   const [parti, setParti] = useState(false)
+  const [fermeture, setFermeture] = useState(false)
   const [charge, setCharge] = useState(false)
   const pile = useRef<HTMLDivElement>(null)
 
@@ -124,6 +179,15 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
     setIndex(i)
   }
 
+  // Joue l'animation de sortie avant de retirer le tiroir
+  const fermerTiroir = useCallback(() => {
+    setFermeture(true)
+    setTimeout(() => {
+      setParti(false)
+      setFermeture(false)
+    }, DUREE_TIROIR_MS)
+  }, [])
+
   if (!charge) return <Chargement mode={mode} />
 
   if (!proposition) {
@@ -140,40 +204,6 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
         </p>
         <button type="button" className="bouton-principal" onClick={retour}>
           Changer de budget
-        </button>
-      </main>
-    )
-  }
-
-  if (parti) {
-    const lieux = [proposition.manger, proposition.cafe, proposition.biere]
-      .filter((c): c is Choix => !!c)
-      .map((c) => c.lieu)
-      .filter((l, i, liste) => liste.findIndex((x) => x.id === l.id) === i)
-    return (
-      <main className="ecran plan plan--parti">
-        <button type="button" className="bouton-fermer" onClick={() => setParti(false)} aria-label="Fermer, revenir aux idées">
-          <IconeCroix />
-        </button>
-        <Illustration paire={ILLUSTRATIONS.baguette} className="plan__illu anim-marche" />
-        <p className="surtitre">C’est parti</p>
-        <h1 className="grand-titre">Vite, t’as {proposition.minutes_a_pied} min pour y aller</h1>
-        <div className="plan__adresses">
-          {lieux.map((l) => (
-            <p key={l.id} className="plan__adresse">
-              <IconeMarche />
-              <span>
-                <strong>{l.nom}</strong>, {l.adresse}
-              </span>
-            </p>
-          ))}
-        </div>
-        <p className="plan__total-final">Total : {formaterPrix(proposition.total_centimes)}</p>
-        <a className="bouton-principal bouton-lien" href={lienGoogleMaps(lieux)} target="_blank" rel="noopener noreferrer">
-          <IconeRepere /> Ouvrir dans Google Maps
-        </a>
-        <button type="button" className="bouton-secondaire" onClick={accueil}>
-          Revenir à l’accueil
         </button>
       </main>
     )
@@ -228,6 +258,13 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
           Modifier mon budget
         </button>
       </div>
+
+      {parti && (
+        <div className={`tiroir-scene${fermeture ? ' tiroir-scene--fermeture' : ''}`}>
+          <div className="tiroir-voile" onClick={fermerTiroir} aria-hidden="true" />
+          <TiroirDepart proposition={proposition} fermer={fermerTiroir} />
+        </div>
+      )}
     </main>
   )
 }

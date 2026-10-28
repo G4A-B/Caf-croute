@@ -378,9 +378,6 @@
   color: var(--couleur-texte-secondaire);
 }
 
-.plan--parti {
-  justify-content: center;
-}
 
 .plan__adresses {
   display: grid;
@@ -543,11 +540,6 @@
   font-weight: var(--graisse-forte);
 }
 
-.plan--parti .plan__illu {
-  align-self: center;
-  width: 160px;
-  height: auto;
-}
 
 /* Animations */
 @keyframes rebond {
@@ -731,15 +723,73 @@
   }
 }
 
-/* Écran « C'est parti » : croix pour revenir aux idées, lien Google Maps */
-.plan--parti {
+/* Tiroir « C'est parti » : monte du bas, voile sur les idées */
+.tiroir-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.tiroir-voile {
+  position: absolute;
+  inset: 0;
+  background: rgb(30 20 18 / 0.45);
+  animation: voile-entree 260ms ease-out;
+}
+
+.tiroir {
   position: relative;
+  display: grid;
+  gap: var(--espace-3);
+  width: 100%;
+  max-width: 30rem;
+  max-height: 85dvh;
+  margin-inline: auto;
+  padding: var(--espace-3) var(--marge-droite) var(--marge-bas) var(--marge-gauche);
+  overflow-y: auto;
+  border-radius: var(--rayon-grand) var(--rayon-grand) 0 0;
+  background: var(--couleur-fond);
+  box-shadow: 0 -8px 32px rgb(30 20 18 / 0.25);
+  animation: tiroir-entree 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.tiroir:focus {
+  outline: none;
+}
+
+.tiroir-scene--fermeture .tiroir {
+  animation: tiroir-sortie 260ms ease-in forwards;
+}
+
+.tiroir-scene--fermeture .tiroir-voile {
+  animation: voile-sortie 260ms ease-in forwards;
+}
+
+.tiroir__poignee {
+  justify-self: center;
+  width: 40px;
+  height: 5px;
+  border-radius: var(--rayon-rond);
+  background: var(--couleur-bordure);
+}
+
+.tiroir__titre {
+  font-size: var(--taille-titre);
+}
+
+.tiroir .plan__illu {
+  justify-self: center;
+  width: 140px;
+  height: auto;
 }
 
 .bouton-fermer {
   position: absolute;
-  top: var(--marge-haut);
-  right: var(--marge-droite);
+  top: var(--espace-3);
+  right: var(--espace-3);
   display: grid;
   place-items: center;
   border: 0;
@@ -754,6 +804,39 @@
   justify-content: center;
   gap: var(--espace-2);
   text-decoration: none;
+}
+
+@keyframes tiroir-entree {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes tiroir-sortie {
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes voile-entree {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes voile-sortie {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tiroir,
+  .tiroir-voile,
+  .tiroir-scene--fermeture .tiroir,
+  .tiroir-scene--fermeture .tiroir-voile {
+    animation: none;
+  }
 }
 
 /* Illustrations : version jour ou nuit selon le mode */

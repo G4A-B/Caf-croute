@@ -73,11 +73,6 @@ export default function App() {
     setEcran(suivant)
   }
 
-  function accueil() {
-    history.replaceState({ nom: 'accueil' }, '')
-    setEcran({ nom: 'accueil' })
-  }
-
   return (
     <div className="scene">
       <div className={`face ${retournement}`}>{ecranCourant()}</div>
@@ -104,7 +99,7 @@ export default function App() {
           />
         )
       case 'plan':
-        return <Plan mode={ecran.mode} budget={ecran.budget} retour={() => history.back()} accueil={accueil} />
+        return <Plan mode={ecran.mode} budget={ecran.budget} retour={() => history.back()} />
     }
   }
 }
