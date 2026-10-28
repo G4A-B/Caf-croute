@@ -1,7 +1,9 @@
 # src/pages
 
-Les écrans de l'app. Pas de routeur : un seul écran est affiché à la fois, choisi dans `src/main.tsx`.
+Les écrans de l'app. Pas de routeur : `src/App.tsx` garde l'écran courant dans son état et dans l'historique (le bouton retour du téléphone marche).
 
-- `Accueil.tsx` : écran provisoire « La Pause » (étape 0).
+- `Accueil.tsx` : choix Café / À manger / Les deux, carte machine à café.
+- `Budget.tsx` : budget proposé (3 suggestions) ou réglé à la règle.
+- `Plan.tsx` : UN plan, « Autre idée », « C'est parti ».
 
 Un écran assemble des composants (`src/components`) et des fonctions métier (`src/features`). Il ne contient pas de calcul.

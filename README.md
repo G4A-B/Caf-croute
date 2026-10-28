@@ -1,4 +1,4 @@
-# La Pause (Caf'croute)
+# Caf'croûte
 
 App pour la pause déj et café des étudiant·es autour de l'école, avec un petit budget.
 
@@ -49,12 +49,16 @@ src/
   features/notifications/ abonnement et calcul des notifications push
   lib/                    utilitaires (format des prix...)
   pages/                  écrans
-  styles/                 tokens.css (provisoires, équipe DA) et base.css
+  styles/                 tokens.css (DA du logo), base.css, ecrans.css
   sw.ts                   service worker (cache, notifications push)
 public/                   icônes et favicon
 ```
 
 Chaque dossier a son README.
+
+## Machine à café
+
+La carte de l'accueil montre l'état de la machine de l'école. N'importe qui peut le changer (« Elle marche » / « En panne ») et tout le monde voit le changement. Il faut Upstash Redis : sur Vercel, Storage > Marketplace > Upstash Redis, relié au projet (crée `KV_REST_API_URL` et `KV_REST_API_TOKEN`, ou `UPSTASH_REDIS_REST_URL` et `UPSTASH_REDIS_REST_TOKEN` : les deux noms marchent), puis redéployer. Sans Upstash, le signalement reste sur le téléphone.
 
 ## PWA et notifications
 

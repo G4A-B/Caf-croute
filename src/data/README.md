@@ -6,7 +6,7 @@ Toutes les données de l'app, versionnées dans le dépôt. Pas de base de donn�
 | --- | --- |
 | `lieux.json` | les lieux autour de l'école (id, nom, type, minutes à pied) |
 | `releves.json` | les relevés de prix datés (un relevé par ligne, on n'écrase jamais) |
-| `machine.json` | les signalements de la machine à café de l'école |
+| `machine.json` | secours hors ligne pour l'état de la machine (l'état réel vient de `/api/machine`) |
 | `types.ts` | types TypeScript et valeurs autorisées |
 | `index.ts` | lecture des données : `prixActuels()`, `prixFiables()`, `etatMachineActuel()`, `lieuParId()` |
 

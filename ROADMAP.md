@@ -7,6 +7,12 @@
 - Données JSON d'exemple et vérification au build
 - Squelette des notifications, configuration Vercel
 
+## Fait le 28 octobre
+
+- 78 vrais relevés, 18 lieux (`docs/releves-2026-10-28.md`)
+- DA du logo, écrans Accueil, Budget, Plan
+- Carte machine partagée (`api/machine.ts`, Upstash à brancher)
+
 ## Étape 1 : le plan
 
 - Saisie du budget (5 € par défaut) et du temps de pause

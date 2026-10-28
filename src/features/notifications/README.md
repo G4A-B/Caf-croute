@@ -4,7 +4,7 @@ Notifications push. Tout est prêt côté app, rien n'est envoyé pour l'instant
 
 ## Deux sujets
 
-1. **La machine remarche** : le dernier signalement de `machine.json` passe à « marche » juste après un « en_panne ».
+1. **La machine remarche** : quelqu'un touche « Elle marche » sur la carte de l'accueil juste après un « En panne ». Décidé dans `api/machine.ts`, au moment du signalement.
 2. **Bon plan** : un nouveau relevé (à manger ou café) coûte moins que le seuil choisi par l'abonné·e.
 
 ## Flux prévu
@@ -16,6 +16,11 @@ clic « Activer les notifications »
 Notification.requestPermission()
 pushManager.subscribe(clé VAPID)
 POST /api/subscribe  ───────────►  api/subscribe.ts  ───────────────►  abonnement:<endpoint>
+
+clic « Elle marche » (carte machine)
+POST /api/machine  ─────────────►  api/machine.ts  ─────────────────►  machine:signalements
+                                   remarche après panne ? anti-rebond 30 min
+                                   web-push (à brancher) ───► abonné·es « machine »
 
 Équipe contenu : commit sur main
                                    déploiement de production
@@ -39,7 +44,8 @@ POST /api/subscribe  ───────────►  api/subscribe.ts  ─
 | `types.ts` | types partagés, délai anti-rebond |
 | `../../sw.ts` | reçoit le push, affiche la notification, ouvre `url` au clic |
 | `../../../api/subscribe.ts` | squelette : valide la demande |
-| `../../../api/notify.ts` | squelette : vérifie la signature du webhook |
+| `../../../api/notify.ts` | squelette : vérifie la signature du webhook (bons plans) |
+| `../../../api/machine.ts` | état partagé de la machine, décide la notification « remarche » |
 
 ## Règles
 
