@@ -8,7 +8,7 @@ L'app répond par **un seul plan** (à manger + café) selon le budget et le tem
 
 Projet de l'atelier « une app en une journée », octobre 2026.
 
-**Site en ligne :** `https://...vercel.app` (à compléter après le premier déploiement)
+**Site en ligne :** https://caf-croute.vercel.app
 
 ## Commandes
 
