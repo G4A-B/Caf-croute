@@ -17,12 +17,9 @@ export type Proposition = {
   total_centimes: number
   // Temps pour rejoindre le lieu le plus loin
   minutes_a_pied: number
-  // Les autres articles du même lieu qui rentrent dans le budget
+  // Les autres articles du même lieu qui rentrent dans le budget (la carte montre ceux qui tiennent)
   autres: Choix[]
 }
-
-// Nombre maximum d'articles en plus affichés sur une carte
-export const AUTRES_MAX = 4
 
 export type Budget = { centimes: number; libelle: string }
 
@@ -100,7 +97,7 @@ function parLieu(choix: Choix[], budget: number): Proposition[] {
       [CLE[principal.releve.categorie]]: principal,
       total_centimes: principal.releve.prix_centimes,
       minutes_a_pied: principal.lieu.minutes_a_pied,
-      autres: autres.slice(0, AUTRES_MAX),
+      autres,
     }
   })
 }

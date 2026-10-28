@@ -697,11 +697,41 @@
   overflow: hidden;
 }
 
-/* Seule la liste des autres articles défile, à l'intérieur de la carte (2 lignes visibles au moins) */
+/* La liste montre les articles qui tiennent dans la carte ; les autres passent par « Voir plus » */
 .carte-plan__autres {
   flex: 0 1 auto;
-  min-height: 5.5rem;
-  overflow-y: auto;
+  min-height: 3.5rem;
+  overflow: hidden;
+}
+
+.plan__cache {
+  visibility: hidden;
+}
+
+.bouton-voir-plus {
+  justify-self: start;
+  min-height: var(--taille-tactile-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  font-weight: var(--graisse-forte);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tiroir__liste {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tiroir__liste li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espace-3);
+  padding-block: var(--espace-2);
+  border-bottom: 1px solid var(--couleur-bordure);
 }
 
 /* Petits téléphones : en-tête plus compact pour laisser la place aux cartes */

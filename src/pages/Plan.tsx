@@ -1,12 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Chargement, Illustration, ILLUSTRATIONS, ILLUSTRATIONS_FIXES } from '../components/Illustrations.tsx'
-import {
-  IconeBiere,
-  IconeCroix,
-  IconeMarche,
-  IconeRepere,
-  IconeRetour,
-} from '../components/Icones.tsx'
+import { IconeBiere, IconeMarche, IconeRepere, IconeRetour } from '../components/Icones.tsx'
+import { DUREE_TIROIR_MS, Tiroir } from '../components/Tiroir.tsx'
 import { PictoSandwich, PictoTasse } from '../components/Pictos.tsx'
 import { lienGoogleMaps } from '../lib/itineraire.ts'
 import { formaterMinutes, formaterPrix } from '../lib/format.ts'
@@ -44,11 +39,41 @@ function Ligne({ choix, icone, avecLieu }: { choix: Choix; icone: React.ReactNod
   )
 }
 
-type PropsCarte = { proposition: Proposition; numero: number; total: number; partir: () => void }
+type PropsCarte = {
+  proposition: Proposition
+  numero: number
+  total: number
+  partir: () => void
+  voirPlus: () => void
+}
 
-function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
+// Nombre d'articles de la liste qui tiennent entièrement dans la carte
+function useArticlesVisibles(total: number) {
+  const zone = useRef<HTMLDivElement>(null)
+  const [visibles, setVisibles] = useState(total)
+
+  useLayoutEffect(() => {
+    const el = zone.current
+    if (!el) return
+    const mesurer = () => {
+      const bas = el.getBoundingClientRect().bottom
+      const lignes = [...el.querySelectorAll('li')]
+      setVisibles(lignes.filter((li) => li.getBoundingClientRect().bottom <= bas + 1).length)
+    }
+    mesurer()
+    const observateur = new ResizeObserver(mesurer)
+    observateur.observe(el)
+    return () => observateur.disconnect()
+  }, [total])
+
+  return { zone, visibles }
+}
+
+function CartePlan({ proposition, numero, total, partir, voirPlus }: PropsCarte) {
   const lieuPrincipal = (proposition.manger ?? proposition.cafe ?? proposition.biere)!.lieu
   const deuxLieux = !!proposition.cafe && !!proposition.manger && proposition.cafe.lieu.id !== proposition.manger.lieu.id
+  const { zone, visibles } = useArticlesVisibles(proposition.autres.length)
+  const caches = proposition.autres.length - visibles
 
   return (
     <article className="carte-plan" aria-roledescription="carte" aria-label={`Idée ${numero} sur ${total}`}>
@@ -65,11 +90,11 @@ function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
       </ul>
 
       {proposition.autres.length > 0 && (
-        <div className="carte-plan__autres">
+        <div className="carte-plan__autres" ref={zone}>
           <p className="carte-plan__sous-titre">Aussi dans ton budget</p>
           <ul>
-            {proposition.autres.map((c) => (
-              <li key={c.releve.id}>
+            {proposition.autres.map((c, i) => (
+              <li key={c.releve.id} className={i >= visibles ? 'plan__cache' : undefined} aria-hidden={i >= visibles}>
                 <span>{c.releve.article}</span>
                 <span className="plan__prix">{formaterPrix(c.releve.prix_centimes)}</span>
               </li>
@@ -79,6 +104,11 @@ function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
       )}
 
       <div className="carte-plan__bas">
+        {caches > 0 && (
+          <button type="button" className="bouton-voir-plus" onClick={voirPlus}>
+            Voir plus ({caches})
+          </button>
+        )}
         <p className="carte-plan__pied">
           <span>
             <IconeMarche /> {proposition.minutes_a_pied} min à pied
@@ -93,10 +123,6 @@ function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
   )
 }
 
-// Tiroir « C'est parti » : monte du bas, les idées restent visibles derrière.
-// Se ferme avec la croix, un tap sur le voile ou la touche Échap.
-const DUREE_TIROIR_MS = 260
-
 // Illustration du tiroir selon le parcours (bière : « trinque ! », version claire pour le fond crème)
 const ILLUSTRATION_TIROIR: Record<Exclude<Mode, 'biere'>, keyof typeof ILLUSTRATIONS> = {
   cafe: 'tasseRose',
@@ -104,33 +130,14 @@ const ILLUSTRATION_TIROIR: Record<Exclude<Mode, 'biere'>, keyof typeof ILLUSTRAT
   les_deux: 'baguette',
 }
 
-function TiroirDepart({ mode, proposition, fermer }: { mode: Mode; proposition: Proposition; fermer: () => void }) {
-  const tiroir = useRef<HTMLDivElement>(null)
+function ContenuDepart({ mode, proposition }: { mode: Mode; proposition: Proposition }) {
   const lieux = [proposition.manger, proposition.cafe, proposition.biere]
     .filter((c): c is Choix => !!c)
     .map((c) => c.lieu)
     .filter((l, i, liste) => liste.findIndex((x) => x.id === l.id) === i)
 
-  useEffect(() => {
-    tiroir.current?.focus()
-    const echap = (e: KeyboardEvent) => e.key === 'Escape' && fermer()
-    document.addEventListener('keydown', echap)
-    return () => document.removeEventListener('keydown', echap)
-  }, [fermer])
-
   return (
-    <div
-      ref={tiroir}
-      className="tiroir"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="titre-depart"
-      tabIndex={-1}
-    >
-      <button type="button" className="bouton-fermer" onClick={fermer} aria-label="Fermer, revenir aux idées">
-        <IconeCroix />
-      </button>
-      <span className="tiroir__poignee" aria-hidden="true" />
+    <>
       <div className="tiroir__illu">
         {mode === 'biere' ? (
           <img src={ILLUSTRATIONS_FIXES.trinqueClair} alt="" className="plan__illu anim-balance" />
@@ -138,7 +145,7 @@ function TiroirDepart({ mode, proposition, fermer }: { mode: Mode; proposition: 
           <Illustration paire={ILLUSTRATIONS[ILLUSTRATION_TIROIR[mode]]} className="plan__illu anim-marche" />
         )}
       </div>
-      <h2 className="tiroir__titre" id="titre-depart">
+      <h2 className="tiroir__titre" id="titre-tiroir">
         Vite, t’as {proposition.minutes_a_pied} min pour y aller
       </h2>
       <div className="plan__adresses">
@@ -155,7 +162,35 @@ function TiroirDepart({ mode, proposition, fermer }: { mode: Mode; proposition: 
       <a className="bouton-principal bouton-lien" href={lienGoogleMaps(lieux)} target="_blank" rel="noopener noreferrer">
         <IconeRepere /> Ouvrir dans Google Maps
       </a>
-    </div>
+    </>
+  )
+}
+
+// Tiroir « Voir plus » : tout ce que le lieu propose dans le budget
+function ContenuListe({ proposition, partir }: { proposition: Proposition; partir: () => void }) {
+  const principal = (proposition.manger ?? proposition.cafe ?? proposition.biere)!
+  const articles = [principal, ...proposition.autres]
+  return (
+    <>
+      <p className="surtitre">Dans ton budget</p>
+      <h2 className="tiroir__titre" id="titre-tiroir">
+        {principal.lieu.nom}
+      </h2>
+      <ul className="tiroir__liste">
+        {articles.map((c) => (
+          <li key={c.releve.id}>
+            <span>
+              {c.releve.article}
+              {c.releve.contenance_cl && ` · ${c.releve.contenance_cl} cl`}
+            </span>
+            <span className="plan__prix">{formaterPrix(c.releve.prix_centimes)}</span>
+          </li>
+        ))}
+      </ul>
+      <button type="button" className="bouton-principal" onClick={partir}>
+        C’est parti
+      </button>
+    </>
   )
 }
 
@@ -164,7 +199,7 @@ type Props = { mode: Mode; budget: number; retour: () => void }
 export default function Plan({ mode, budget, retour }: Props) {
   const liste = useMemo(() => propositions(mode, budget), [mode, budget])
   const [index, setIndex] = useState(0)
-  const [parti, setParti] = useState(false)
+  const [tiroir, setTiroir] = useState<'depart' | 'liste' | null>(null)
   const [fermeture, setFermeture] = useState(false)
   const [charge, setCharge] = useState(false)
   const pile = useRef<HTMLDivElement>(null)
@@ -194,7 +229,7 @@ export default function Plan({ mode, budget, retour }: Props) {
   const fermerTiroir = useCallback(() => {
     setFermeture(true)
     setTimeout(() => {
-      setParti(false)
+      setTiroir(null)
       setFermeture(false)
     }, DUREE_TIROIR_MS)
   }, [])
@@ -243,7 +278,11 @@ export default function Plan({ mode, budget, retour }: Props) {
             total={liste.length}
             partir={() => {
               setIndex(i)
-              setParti(true)
+              setTiroir('depart')
+            }}
+            voirPlus={() => {
+              setIndex(i)
+              setTiroir('liste')
             }}
           />
         ))}
@@ -270,11 +309,14 @@ export default function Plan({ mode, budget, retour }: Props) {
         </button>
       </div>
 
-      {parti && (
-        <div className={`tiroir-scene${fermeture ? ' tiroir-scene--fermeture' : ''}`}>
-          <div className="tiroir-voile" onClick={fermerTiroir} aria-hidden="true" />
-          <TiroirDepart mode={mode} proposition={proposition} fermer={fermerTiroir} />
-        </div>
+      {tiroir && (
+        <Tiroir titreId="titre-tiroir" fermeture={fermeture} fermer={fermerTiroir}>
+          {tiroir === 'depart' ? (
+            <ContenuDepart mode={mode} proposition={proposition} />
+          ) : (
+            <ContenuListe proposition={proposition} partir={() => setTiroir('depart')} />
+          )}
+        </Tiroir>
       )}
     </main>
   )
