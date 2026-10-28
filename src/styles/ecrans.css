@@ -32,9 +32,6 @@
   background: currentColor;
 }
 
-.accueil .grand-titre {
-  margin-top: var(--espace-2);
-}
 
 .choix {
   display: grid;

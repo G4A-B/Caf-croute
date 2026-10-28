@@ -1,28 +1,10 @@
-import { useEffect, useState } from 'react'
 import logo from '../assets/logo.svg'
 import { ILLUSTRATIONS_FIXES } from '../components/Illustrations.tsx'
 import { IconeFleche, IconeLune, IconeSoleil } from '../components/Icones.tsx'
 import { PictoSandwich, PictoTasse } from '../components/Pictos.tsx'
 import CarteMachine from '../features/machine/CarteMachine.tsx'
-import { DEBUT_NUIT, FIN_NUIT, type Moment } from '../features/moment/moment.ts'
+import type { Moment } from '../features/moment/moment.ts'
 import { MINUTES_MAX, nombreDeLieux, type Mode } from '../features/plan/plan.ts'
-
-function surtitreDuJour(maintenant: Date, moment: Moment): string {
-  const jour = new Intl.DateTimeFormat('fr-FR', { weekday: 'long' }).format(maintenant)
-  const heure = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' }).format(maintenant)
-  const prochain = moment === 'jour' ? `mode nuit à ${DEBUT_NUIT} h` : `mode jour à ${FIN_NUIT} h`
-  return `${jour} · ${heure.replace(':', ' h ')} · ${prochain}`
-}
-
-// L'heure affichée avance toute seule
-function useMaintenant(): Date {
-  const [maintenant, setMaintenant] = useState(() => new Date())
-  useEffect(() => {
-    const t = setInterval(() => setMaintenant(new Date()), 15_000)
-    return () => clearInterval(t)
-  }, [])
-  return maintenant
-}
 
 function pluriel(n: number, mot: string): string {
   return `${n} ${mot}${n > 1 ? 's' : ''}`
@@ -32,7 +14,6 @@ type Props = { moment: Moment; basculer: () => void; choisir: (mode: Mode) => vo
 
 export default function Accueil({ moment, basculer, choisir }: Props) {
   const nuit = moment === 'nuit'
-  const maintenant = useMaintenant()
 
   return (
     <main className="ecran accueil">
@@ -49,12 +30,7 @@ export default function Accueil({ moment, basculer, choisir }: Props) {
         </button>
       </header>
 
-      <div>
-        <p className="surtitre">
-          <time dateTime={maintenant.toISOString()}>{surtitreDuJour(maintenant, moment)}</time>
-        </p>
-        <h1 className="grand-titre">{nuit ? 'Tu bois quoi ce soir ?' : 'Tu as envie de quoi ?'}</h1>
-      </div>
+      <h1 className="grand-titre">{nuit ? 'Tu bois quoi ce soir ?' : 'Tu as envie de quoi ?'}</h1>
 
       {nuit ? (
         <div className="choix">
