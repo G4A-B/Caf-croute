@@ -16,7 +16,8 @@ Projet « Caf'croûte » (dépôt Caf-croute, nom provisoire de départ : La Pau
 
 - Vite + React + TypeScript, CSS natif avec les variables de `src/styles/tokens.css`. DA : couleurs du logo (brun #442d29, crème #fffae5, rose #f4b6c5), police Montserrat hébergée dans `public/fonts`. Le logo (`src/assets/logo.svg`) utilise aussi Memimas Pro, déjà vectorisée. Pas de framework CSS.
 - Pas de base de données pour le contenu. Seul stockage serveur : Upstash Redis (API REST appelée avec `fetch`), pour l'état de la machine, les abonnements push et l'état des envois.
-- Pas de carte, pas de géolocalisation, pas de bibliothèque de cartographie.
+- Pas de carte dans l'app, pas de géolocalisation, pas de bibliothèque de cartographie. Seule exception : sur « C'est parti », un lien ouvre l'itinéraire à pied dans Google Maps (`src/lib/itineraire.ts`), depuis l'école.
+- Écran des idées : tout tient dans la hauteur du téléphone, sans défilement de page. « C'est parti » est collé en bas de chaque carte.
 - Pas d'authentification, pas de routeur. Aucune dépendance nouvelle sans raison claire (`web-push` pour l'envoi des notifications ; Upstash est appelé par `fetch`, sans SDK).
 - PWA : vite-plugin-pwa en `injectManifest`, service worker écrit à la main dans `src/sw.ts`. La permission de notification se demande après un geste, jamais au chargement.
 - Aucun secret dans le code ni dans le dépôt. Les clés secrètes ne portent jamais le préfixe `VITE_`.

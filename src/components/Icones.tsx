@@ -93,3 +93,20 @@ export function IconeLune({ taille = 16 }: Props) {
     </svg>
   )
 }
+
+export function IconeCroix({ taille = 24 }: Props) {
+  return (
+    <svg width={taille} height={taille} viewBox="0 0 24 24" aria-hidden="true" {...trait} strokeWidth={2.5}>
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  )
+}
+
+export function IconeRepere({ taille = 20 }: Props) {
+  return (
+    <svg width={taille} height={taille} viewBox="0 0 24 24" aria-hidden="true" {...trait}>
+      <path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  )
+}

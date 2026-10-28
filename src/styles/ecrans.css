@@ -456,9 +456,6 @@
   border-bottom: 1px solid var(--couleur-bordure);
 }
 
-.carte-plan .carte-plan__pied {
-  margin-top: auto;
-}
 
 .points {
   display: flex;
@@ -621,9 +618,63 @@
   }
 }
 
-/* Bouton « C'est parti » en bas de chaque carte */
-.carte-plan .bouton-principal {
-  margin-top: var(--espace-2);
+/* Écran des idées : tout tient dans la hauteur du téléphone, sans défiler */
+.plan--idees {
+  height: 100dvh;
+  min-height: 0;
+  gap: var(--espace-4);
+  overflow: hidden;
+}
+
+.plan--idees .pile {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.plan--idees .plan__actions {
+  margin-top: 0;
+}
+
+.pile .carte-plan {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Seule la liste des autres articles défile, à l'intérieur de la carte (2 lignes visibles au moins) */
+.carte-plan__autres {
+  flex: 0 1 auto;
+  min-height: 5.5rem;
+  overflow-y: auto;
+}
+
+/* Petits téléphones : en-tête plus compact pour laisser la place aux cartes */
+@media (max-height: 720px) {
+  .plan--idees {
+    gap: var(--espace-3);
+  }
+
+  .plan--idees .grand-titre {
+    font-size: var(--taille-titre);
+  }
+
+  .plan--idees .plan__astuce {
+    display: none;
+  }
+
+  .pile .carte-plan {
+    padding: var(--espace-4);
+    gap: var(--espace-2);
+  }
+}
+
+/* Prix total et « C'est parti » collés en bas de la carte */
+.carte-plan__bas {
+  display: grid;
+  gap: var(--espace-3);
+  margin-top: auto;
+  padding-top: var(--espace-2);
 }
 
 /* Mode nuit : la carte Bières prend toute la largeur */
@@ -678,4 +729,29 @@
   .retournement-retour {
     animation: none;
   }
+}
+
+/* Écran « C'est parti » : croix pour revenir aux idées, lien Google Maps */
+.plan--parti {
+  position: relative;
+}
+
+.bouton-fermer {
+  position: absolute;
+  top: var(--marge-haut);
+  right: var(--marge-droite);
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--couleur-surface);
+  color: var(--couleur-texte);
+}
+
+.bouton-lien {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espace-2);
+  text-decoration: none;
 }

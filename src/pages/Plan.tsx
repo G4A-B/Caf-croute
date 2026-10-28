@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Chargement, ILLUSTRATIONS } from '../components/Illustrations.tsx'
-import { IconeBiere, IconeMarche, IconeRetour, IconeSandwich, IconeTasse } from '../components/Icones.tsx'
+import {
+  IconeBiere,
+  IconeCroix,
+  IconeMarche,
+  IconeRepere,
+  IconeRetour,
+  IconeSandwich,
+  IconeTasse,
+} from '../components/Icones.tsx'
+import { lienGoogleMaps } from '../lib/itineraire.ts'
 import { formaterMinutes, formaterPrix } from '../lib/format.ts'
 import { propositions, type Choix, type Mode, type Proposition } from '../features/plan/plan.ts'
 
@@ -70,16 +79,17 @@ function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
         </div>
       )}
 
-      <p className="carte-plan__pied">
-        <span>
-          <IconeMarche /> {proposition.minutes_a_pied} min à pied
-        </span>
-        <span className="carte-plan__total">{formaterPrix(proposition.total_centimes)}</span>
-      </p>
-
-      <button type="button" className="bouton-principal" onClick={partir}>
-        C’est parti
-      </button>
+      <div className="carte-plan__bas">
+        <p className="carte-plan__pied">
+          <span>
+            <IconeMarche /> {proposition.minutes_a_pied} min à pied
+          </span>
+          <span className="carte-plan__total">{formaterPrix(proposition.total_centimes)}</span>
+        </p>
+        <button type="button" className="bouton-principal" onClick={partir}>
+          C’est parti
+        </button>
+      </div>
     </article>
   )
 }
@@ -136,28 +146,33 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
   }
 
   if (parti) {
+    const lieux = [proposition.manger, proposition.cafe, proposition.biere]
+      .filter((c): c is Choix => !!c)
+      .map((c) => c.lieu)
+      .filter((l, i, liste) => liste.findIndex((x) => x.id === l.id) === i)
     return (
       <main className="ecran plan plan--parti">
+        <button type="button" className="bouton-fermer" onClick={() => setParti(false)} aria-label="Fermer, revenir aux idées">
+          <IconeCroix />
+        </button>
         <img src={ILLUSTRATIONS.baguette} alt="" className="plan__illu anim-marche" />
         <p className="surtitre">C’est parti</p>
         <h1 className="grand-titre">Vite, t’as {proposition.minutes_a_pied} min pour y aller</h1>
         <div className="plan__adresses">
-          {[proposition.manger, proposition.cafe, proposition.biere]
-            .filter((c, i, l): c is Choix => !!c && l.findIndex((x) => x?.lieu.id === c.lieu.id) === i)
-            .map((c) => (
-              <p key={c.lieu.id} className="plan__adresse">
-                <IconeMarche />
-                <span>
-                  <strong>{c.lieu.nom}</strong>, {c.lieu.adresse}
-                </span>
-              </p>
-            ))}
+          {lieux.map((l) => (
+            <p key={l.id} className="plan__adresse">
+              <IconeMarche />
+              <span>
+                <strong>{l.nom}</strong>, {l.adresse}
+              </span>
+            </p>
+          ))}
         </div>
         <p className="plan__total-final">Total : {formaterPrix(proposition.total_centimes)}</p>
-        <button type="button" className="bouton-secondaire" onClick={() => setParti(false)}>
-          Voir les autres idées
-        </button>
-        <button type="button" className="bouton-principal" onClick={accueil}>
+        <a className="bouton-principal bouton-lien" href={lienGoogleMaps(lieux)} target="_blank" rel="noopener noreferrer">
+          <IconeRepere /> Ouvrir dans Google Maps
+        </a>
+        <button type="button" className="bouton-secondaire" onClick={accueil}>
           Revenir à l’accueil
         </button>
       </main>
@@ -165,7 +180,7 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
   }
 
   return (
-    <main className="ecran plan">
+    <main className="ecran plan plan--idees">
       <button type="button" className="bouton-retour" onClick={retour}>
         <IconeRetour /> Retour
       </button>
