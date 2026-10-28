@@ -6,6 +6,7 @@ import sandwich from '../assets/illus/sandwich.svg'
 import tasseBrune from '../assets/illus/tasse-brune.svg'
 import tasseRose from '../assets/illus/tasse-rose.svg'
 import type { Mode } from '../features/plan/plan.ts'
+import { IconeBiere } from './Icones.tsx'
 
 // Illustrations de l'équipe DA, animées en CSS (voir ecrans.css, coupé si « réduire les animations »)
 export const ILLUSTRATIONS = { baguette, duo, sandwich, tasseBrune, tasseRose }
@@ -35,6 +36,7 @@ const CHARGEMENTS: Record<Mode, { illus: string[]; texte: string }> = {
   cafe: { illus: [tasseRose], texte: 'On cherche ton café…' },
   manger: { illus: [sandwich], texte: 'On cherche de quoi manger…' },
   les_deux: { illus: [tasseBrune, baguette], texte: 'On assemble ta pause…' },
+  biere: { illus: [], texte: 'On cherche ta bière…' },
 }
 
 // Micro-chargement avant les idées
@@ -43,6 +45,12 @@ export function Chargement({ mode }: { mode: Mode }) {
   return (
     <main className="ecran chargement" role="status">
       <div className="chargement__illus">
+        {/* Provisoire : l'icône bière de l'équipe DA remplacera ce pictogramme */}
+        {illus.length === 0 && (
+          <span className="chargement__picto anim-balance">
+            <IconeBiere taille={140} />
+          </span>
+        )}
         {illus.map((src, i) => (
           <img
             key={src}

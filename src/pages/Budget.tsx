@@ -7,6 +7,7 @@ const QUESTIONS: Record<Mode, { titre: string; bouton: string }> = {
   cafe: { titre: 'Ton budget pour un café ?', bouton: 'Voir les cafés' },
   manger: { titre: 'Ton budget pour manger ?', bouton: 'Voir les idées' },
   les_deux: { titre: 'Ton budget pour la pause ?', bouton: 'Voir les idées' },
+  biere: { titre: 'Ton budget pour une bière ?', bouton: 'Voir les bières' },
 }
 
 type Props = { mode: Mode; retour: () => void; valider: (centimes: number) => void }

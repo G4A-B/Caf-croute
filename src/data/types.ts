@@ -9,7 +9,7 @@ export const TYPES_LIEU = [
   'machine_ecole',
   'autre',
 ] as const
-export const CATEGORIES = ['a_manger', 'cafe', 'autre'] as const
+export const CATEGORIES = ['a_manger', 'cafe', 'biere', 'autre'] as const
 // Pour comparer les cafés entre eux (catégorie « cafe » seulement)
 export const TYPES_CAFE = ['expresso', 'double', 'allonge', 'creme', 'au_lait', 'specialite', 'glace'] as const
 // Le même café coûte parfois plus cher en salle qu'au comptoir
@@ -24,6 +24,9 @@ export const RELEVE_PAR_MAX = 40
 export const ADRESSE_MAX = 120
 export const SOURCE_MAX = 120
 export const REMARQUE_MAX = 160
+// Bières : contenance en centilitres (demi 25 cl, pinte 50 cl...)
+export const CONTENANCE_MIN_CL = 5
+export const CONTENANCE_MAX_CL = 100
 // Au-delà, l'état de la machine s'affiche « inconnu »
 export const DUREE_VALIDITE_MACHINE_MS = 2 * 60 * 60 * 1000
 
@@ -55,6 +58,8 @@ export type RelevePrix = {
   source: string
   type_cafe?: TypeCafe
   consommation?: Consommation
+  // Bières seulement
+  contenance_cl?: number
   // true : prix à confirmer sur place, l'app ne le propose pas encore
   a_verifier?: boolean
   remarque?: string

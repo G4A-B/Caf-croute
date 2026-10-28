@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Chargement, ILLUSTRATIONS } from '../components/Illustrations.tsx'
-import { IconeMarche, IconeRetour, IconeSandwich, IconeTasse } from '../components/Icones.tsx'
+import { IconeBiere, IconeMarche, IconeRetour, IconeSandwich, IconeTasse } from '../components/Icones.tsx'
 import { formaterMinutes, formaterPrix } from '../lib/format.ts'
 import { propositions, type Choix, type Mode, type Proposition } from '../features/plan/plan.ts'
 
@@ -20,7 +20,10 @@ function Ligne({ choix, icone, avecLieu }: { choix: Choix; icone: React.ReactNod
     <li className="plan__ligne">
       <span className="plan__icone">{icone}</span>
       <span className="plan__article">
-        <span className="plan__nom-article">{choix.releve.article}</span>
+        <span className="plan__nom-article">
+          {choix.releve.article}
+          {choix.releve.contenance_cl && ` · ${choix.releve.contenance_cl} cl`}
+        </span>
         {avecLieu && (
           <span className="plan__lieu">
             {choix.lieu.nom} · {formaterMinutes(choix.lieu.minutes_a_pied)}
@@ -33,8 +36,10 @@ function Ligne({ choix, icone, avecLieu }: { choix: Choix; icone: React.ReactNod
   )
 }
 
-function CartePlan({ proposition, numero, total }: { proposition: Proposition; numero: number; total: number }) {
-  const lieuPrincipal = (proposition.manger ?? proposition.cafe)!.lieu
+type PropsCarte = { proposition: Proposition; numero: number; total: number; partir: () => void }
+
+function CartePlan({ proposition, numero, total, partir }: PropsCarte) {
+  const lieuPrincipal = (proposition.manger ?? proposition.cafe ?? proposition.biere)!.lieu
   const deuxLieux = !!proposition.cafe && !!proposition.manger && proposition.cafe.lieu.id !== proposition.manger.lieu.id
 
   return (
@@ -48,6 +53,7 @@ function CartePlan({ proposition, numero, total }: { proposition: Proposition; n
           <Ligne choix={proposition.manger} icone={<IconeSandwich taille={28} />} avecLieu={deuxLieux} />
         )}
         {proposition.cafe && <Ligne choix={proposition.cafe} icone={<IconeTasse taille={28} />} avecLieu={deuxLieux} />}
+        {proposition.biere && <Ligne choix={proposition.biere} icone={<IconeBiere taille={28} />} avecLieu={false} />}
       </ul>
 
       {proposition.autres.length > 0 && (
@@ -70,6 +76,10 @@ function CartePlan({ proposition, numero, total }: { proposition: Proposition; n
         </span>
         <span className="carte-plan__total">{formaterPrix(proposition.total_centimes)}</span>
       </p>
+
+      <button type="button" className="bouton-principal" onClick={partir}>
+        C’est parti
+      </button>
     </article>
   )
 }
@@ -113,7 +123,11 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
           <IconeRetour /> Retour
         </button>
         <h1 className="grand-titre">Rien à {formaterPrix(budget)} autour de l’école</h1>
-        <p className="plan__vide">Monte un peu le budget : on trouvera bien quelque chose.</p>
+        <p className="plan__vide">
+          {mode === 'biere'
+            ? 'Les prix des bières arrivent bientôt. Monte un peu le budget en attendant.'
+            : 'Monte un peu le budget : on trouvera bien quelque chose.'}
+        </p>
         <button type="button" className="bouton-principal" onClick={retour}>
           Changer de budget
         </button>
@@ -128,7 +142,7 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
         <p className="surtitre">C’est parti</p>
         <h1 className="grand-titre">Vite, t’as {proposition.minutes_a_pied} min pour y aller</h1>
         <div className="plan__adresses">
-          {[proposition.manger, proposition.cafe]
+          {[proposition.manger, proposition.cafe, proposition.biere]
             .filter((c, i, l): c is Choix => !!c && l.findIndex((x) => x?.lieu.id === c.lieu.id) === i)
             .map((c) => (
               <p key={c.lieu.id} className="plan__adresse">
@@ -166,7 +180,16 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
 
       <div className="pile" ref={pile} onScroll={suivreGlissement} aria-label="Idées de pause">
         {liste.map((p, i) => (
-          <CartePlan key={i} proposition={p} numero={i + 1} total={liste.length} />
+          <CartePlan
+            key={i}
+            proposition={p}
+            numero={i + 1}
+            total={liste.length}
+            partir={() => {
+              setIndex(i)
+              setParti(true)
+            }}
+          />
         ))}
       </div>
 
@@ -186,9 +209,6 @@ export default function Plan({ mode, budget, retour, accueil }: Props) {
       )}
 
       <div className="plan__actions">
-        <button type="button" className="bouton-principal" onClick={() => setParti(true)}>
-          C’est parti
-        </button>
         <button type="button" className="bouton-secondaire" onClick={retour}>
           Modifier mon budget
         </button>

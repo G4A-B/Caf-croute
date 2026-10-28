@@ -3,7 +3,7 @@
 import { lieux as tousLesLieux, prixFiables } from '../../data/index.ts'
 import type { Lieu, RelevePrix } from '../../data/types.ts'
 
-export type Mode = 'cafe' | 'manger' | 'les_deux'
+export type Mode = 'cafe' | 'manger' | 'les_deux' | 'biere'
 
 // On ne propose que ce qui est à 10 min à pied ou moins
 export const MINUTES_MAX = 10
@@ -13,6 +13,7 @@ export type Choix = { releve: RelevePrix; lieu: Lieu }
 export type Proposition = {
   cafe?: Choix
   manger?: Choix
+  biere?: Choix
   total_centimes: number
   // Temps pour rejoindre le lieu le plus loin
   minutes_a_pied: number
@@ -53,6 +54,22 @@ export const BUDGETS: Record<Mode, { min: number; max: number; suggestions: Budg
       { centimes: 1000, libelle: 'Je me fais plaisir' },
     ],
   },
+  biere: {
+    min: 200,
+    max: 1000,
+    suggestions: [
+      { centimes: 300, libelle: 'Un demi' },
+      { centimes: 500, libelle: 'Une pinte' },
+      { centimes: 700, libelle: 'Une spéciale' },
+    ],
+  },
+}
+
+const CLE: Record<RelevePrix['categorie'], 'cafe' | 'manger' | 'biere'> = {
+  cafe: 'cafe',
+  a_manger: 'manger',
+  biere: 'biere',
+  autre: 'manger',
 }
 
 type Donnees = { releves: RelevePrix[]; lieux: Lieu[] }
@@ -80,7 +97,7 @@ function parLieu(choix: Choix[], budget: number): Proposition[] {
   return [...groupes.values()].map((liste) => {
     const [principal, ...autres] = liste.sort((a, b) => b.releve.prix_centimes - a.releve.prix_centimes)
     return {
-      [principal.releve.categorie === 'cafe' ? 'cafe' : 'manger']: principal,
+      [CLE[principal.releve.categorie]]: principal,
       total_centimes: principal.releve.prix_centimes,
       minutes_a_pied: principal.lieu.minutes_a_pied,
       autres: autres.slice(0, AUTRES_MAX),
@@ -134,7 +151,9 @@ export function propositions(
       ? parLieu(cafes, budget)
       : mode === 'manger'
         ? parLieu(plats, budget)
-        : duos(cafes, plats, budget)
+        : mode === 'biere'
+          ? parLieu(choixProches('biere', donnees), budget)
+          : duos(cafes, plats, budget)
   return liste.sort(ordre)
 }
 

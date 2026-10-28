@@ -75,3 +75,19 @@
   --marge-bas: max(var(--espace-4), env(safe-area-inset-bottom));
   --marge-gauche: max(var(--espace-5), env(safe-area-inset-left));
 }
+
+/*
+ * Mode nuit (voir src/features/moment/moment.ts) : le brun devient le fond, le crème le texte,
+ * le rose reste en petite touche d'accent. Contraste AA vérifié.
+ */
+:root[data-moment='nuit'] {
+  --couleur-fond: var(--brun);
+  --couleur-surface: #553a35;
+  --couleur-texte: var(--creme);
+  --couleur-texte-secondaire: #e9dcc8; /* 9.4:1 sur le fond, 7.6:1 sur la surface */
+  --couleur-bordure: rgb(255 250 229 / 0.22);
+  --couleur-accent: var(--rose); /* 7.5:1 sur le fond */
+  --couleur-accent-texte: var(--brun);
+  --couleur-mise-en-avant: #62453f; /* crème dessus : 8.2:1 */
+  --couleur-focus: var(--rose);
+}

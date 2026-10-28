@@ -8,6 +8,8 @@ import {
   ARTICLE_MAX,
   CATEGORIES,
   CONSOMMATIONS,
+  CONTENANCE_MAX_CL,
+  CONTENANCE_MIN_CL,
   ETATS_MACHINE,
   NOM_MAX,
   PRIX_MAX_CENTIMES,
@@ -127,19 +129,22 @@ verifier(
     source,
     type_cafe: parmi(TYPES_CAFE),
     consommation: parmi(CONSOMMATIONS),
+    contenance_cl: entier(CONTENANCE_MIN_CL, CONTENANCE_MAX_CL),
     a_verifier: booleen,
     remarque: texte(REMARQUE_MAX),
     releve_par: texte(RELEVE_PAR_MAX),
   },
-  ['type_cafe', 'consommation', 'a_verifier', 'remarque', 'releve_par'],
+  ['type_cafe', 'consommation', 'contenance_cl', 'a_verifier', 'remarque', 'releve_par'],
 )
 
-// type_cafe : obligatoire pour un café, interdit sinon
+// type_cafe : obligatoire pour un café, interdit sinon ; contenance_cl : bières seulement
 releves.entrees.forEach((r, i) => {
   const ou = `${releves.chemin}, ${ligne(releves, r, i)}`
   if (r.categorie === 'cafe' && !('type_cafe' in r))
     erreurs.push(`${ou} : type_cafe manquant (${TYPES_CAFE.join(', ')}).`)
   if (r.categorie !== 'cafe' && 'type_cafe' in r) erreurs.push(`${ou} : type_cafe seulement pour la catégorie cafe.`)
+  if (r.categorie !== 'biere' && 'contenance_cl' in r)
+    erreurs.push(`${ou} : contenance_cl seulement pour la catégorie biere.`)
 })
 
 verifier(machine, { id: identifiant, etat: parmi(ETATS_MACHINE), date })
