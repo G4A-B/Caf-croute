@@ -199,17 +199,6 @@
     "releve_par": "Équipe contenu"
   },
   {
-    "id": "r-0019",
-    "lieu_id": "gang",
-    "article": "Œuf et pain muffin",
-    "categorie": "a_manger",
-    "prix_centimes": 650,
-    "date": "2026-10-28T12:55:00+01:00",
-    "source": "photo:image-20261028-125705-cfbe1957_8793.jpeg",
-    "remarque": "Breakfast 8 h-11 h",
-    "releve_par": "Équipe contenu"
-  },
-  {
     "id": "r-0020",
     "lieu_id": "halles-cote-et-vin",
     "article": "Café expresso",
