@@ -282,7 +282,56 @@
 .regle input {
   flex: 1;
   min-height: var(--taille-tactile-min);
-  accent-color: var(--couleur-accent);
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+/* Barre blanche, partie remplie en couleur d'accent jusqu'au budget choisi */
+.regle input::-webkit-slider-runnable-track {
+  height: 8px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-rond);
+  background: linear-gradient(
+    to right,
+    var(--couleur-accent) 0 var(--remplissage, 50%),
+    #ffffff var(--remplissage, 50%) 100%
+  );
+}
+
+.regle input::-moz-range-track {
+  height: 8px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-rond);
+  background: #ffffff;
+}
+
+.regle input::-moz-range-progress {
+  height: 8px;
+  border-radius: var(--rayon-rond);
+  background: var(--couleur-accent);
+}
+
+.regle input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: var(--couleur-accent);
+  box-shadow: 0 1px 4px rgb(30 20 18 / 0.3);
+}
+
+.regle input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: var(--couleur-accent);
+  box-shadow: 0 1px 4px rgb(30 20 18 / 0.3);
 }
 
 .regle__valeur {

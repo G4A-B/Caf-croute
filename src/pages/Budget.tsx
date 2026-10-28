@@ -57,6 +57,7 @@ export default function Budget({ mode, retour, valider }: Props) {
             value={centimes}
             onChange={(e) => setCentimes(Number(e.target.value))}
             aria-valuetext={formaterPrix(centimes)}
+            style={{ '--remplissage': `${((centimes - min) / (max - min)) * 100}%` } as React.CSSProperties}
           />
           <output htmlFor={idRegle} className="regle__valeur">
             {formaterPrix(centimes)}
