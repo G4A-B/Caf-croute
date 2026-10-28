@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Chargement, Illustration, ILLUSTRATIONS, ILLUSTRATIONS_FIXES } from '../components/Illustrations.tsx'
-import { IconeBiere, IconeMarche, IconeRepere, IconeRetour } from '../components/Icones.tsx'
+import { IconeMarche, IconeRepere, IconeRetour } from '../components/Icones.tsx'
 import { DUREE_TIROIR_MS, Tiroir } from '../components/Tiroir.tsx'
-import { PictoSandwich, PictoTasse } from '../components/Pictos.tsx'
+import { PictoBiere, PictoSandwich, PictoTasse } from '../components/Pictos.tsx'
 import { lienGoogleMaps } from '../lib/itineraire.ts'
 import { formaterMinutes, formaterPrix, sansMotSeul } from '../lib/format.ts'
 import { propositions, type Choix, type Mode, type Proposition } from '../features/plan/plan.ts'
@@ -24,8 +24,10 @@ function Ligne({ choix, icone, avecLieu }: { choix: Choix; icone: React.ReactNod
       <span className="plan__icone">{icone}</span>
       <span className="plan__article">
         <span className="plan__nom-article">
-          {sansMotSeul(choix.releve.article)}
-          {choix.releve.contenance_cl && ` · ${choix.releve.contenance_cl} cl`}
+          {/* Contenance collée au dernier mot : jamais « · 33 cl » seul en début de ligne */}
+          {choix.releve.contenance_cl
+            ? sansMotSeul(`${choix.releve.article}\u00a0·\u00a0${choix.releve.contenance_cl}\u00a0cl`)
+            : sansMotSeul(choix.releve.article)}
         </span>
         {avecLieu && (
           <span className="plan__lieu">
@@ -86,7 +88,7 @@ function CartePlan({ proposition, numero, total, partir, voirPlus }: PropsCarte)
           <Ligne choix={proposition.manger} icone={<PictoSandwich hauteur={20} />} avecLieu={deuxLieux} />
         )}
         {proposition.cafe && <Ligne choix={proposition.cafe} icone={<PictoTasse hauteur={24} />} avecLieu={deuxLieux} />}
-        {proposition.biere && <Ligne choix={proposition.biere} icone={<IconeBiere taille={28} />} avecLieu={false} />}
+        {proposition.biere && <Ligne choix={proposition.biere} icone={<PictoBiere hauteur={32} />} avecLieu={false} />}
       </ul>
 
       {proposition.autres.length > 0 && (

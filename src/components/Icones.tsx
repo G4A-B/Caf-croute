@@ -65,18 +65,6 @@ export function IconeMarche({ taille = 20 }: Props) {
   )
 }
 
-// Petit pictogramme pour les lignes des cartes (les illustrations bière sont dans src/assets/illus)
-export function IconeBiere({ taille = 48 }: Props) {
-  return (
-    <svg width={taille} height={taille} viewBox="0 0 48 48" aria-hidden="true" {...trait} strokeWidth={3}>
-      <path d="M11 14a6 6 0 0 1 6-6 7 7 0 0 1 12 0 6 6 0 0 1 4 10" />
-      <path d="M11 14h22v26a3 3 0 0 1-3 3H14a3 3 0 0 1-3-3z" />
-      <path d="M33 20h3a5 5 0 0 1 5 5v5a5 5 0 0 1-5 5h-3" />
-      <path d="M18 22v14M26 22v14" />
-    </svg>
-  )
-}
-
 export function IconeSoleil({ taille = 16 }: Props) {
   return (
     <svg width={taille} height={taille} viewBox="0 0 24 24" aria-hidden="true" {...trait}>
